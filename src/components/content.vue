@@ -1,12 +1,12 @@
 <template>
-  	<ul class="footer">
-  		
-  	</ul>
+  	<div class="content">
+  		<slot></slot>
+  	</div>
 </template>
 
 <script>
 export default {
-  name: 'vFooter',
+  name: 'vContent',
   data () {
     return {
     }
@@ -16,12 +16,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-	.footer{
-		display:flex;
-		width: 100%;
-		height: 50px;
+	.content{
 		position: absolute;
-		bottom: 0;
+		top:50px;
+		bottom: 50px;
+		right: 0;
 		left: 0;
+		overflow-y: auto;
+		overflow-x:hidden;
 	}
 </style>

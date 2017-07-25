@@ -1,12 +1,20 @@
 <template>
-  <div id="app">
+  <div id="app" v-fullheight>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  directives:{
+    fullheight:{
+      bind (el,binding,vnode) {
+          console.log(el.style.height);
+          el.style.height=window.innerHeight+'px';
+      }
+    }
+  }
 }
 </script>
 
@@ -20,5 +28,6 @@ export default {
   #app{
     max-width: 640px;
     margin:0 auto;
+    position: relative;
   }
 </style>
