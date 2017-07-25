@@ -1,0 +1,24 @@
+<template>
+  <div id="app">
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'app'
+}
+</script>
+
+<style>
+  *{margin:0;padding: 0;}
+  body{font-family: "微软雅黑";font-size: 14px;}
+  a{text-decoration:none;color:#000;}
+  ul,li{
+    list-style-type: none;
+  }
+  #app{
+    max-width: 640px;
+    margin:0 auto;
+  }
+</style>
