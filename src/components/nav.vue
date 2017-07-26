@@ -59,7 +59,7 @@ export default {
 	width:100%;
 	display: flex;
 	height: 49px;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #ccc;
 }
 .topNav>li{
 	display: flex;

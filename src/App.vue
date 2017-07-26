@@ -10,7 +10,6 @@ export default {
   directives:{
     fullheight:{
       bind (el,binding,vnode) {
-          console.log(el.style.height);
           el.style.height=window.innerHeight+'px';
       }
     }
