@@ -4,7 +4,7 @@ Vue.use(vueResource);
 const mixin={
 	data () {
 		return {
-			target:'https://www.vue-js.com/api/v1/',
+			target:'https://www.vue-js.com/api/v1',
 			page:1,
 			complete:false,
 			loading:false,
@@ -14,17 +14,12 @@ const mixin={
 	created () {
 		this.complete=true;
 	},
+	mounted (){
+		this.pullData();
+	},
 	watch:{
 		$route (news,old) {
-			this.init();
-			let param=this.createApi();
-			let that=this;
-			this.getFromApi(param.url,param.option,function(data){
-				let dataList=data.data.data;
-				if (dataList.length>0){
-					that.pageData=JSON.parse(JSON.stringify(dataList));
-				}
-			})
+			this.pullData();
 		}
 	},
 	methods:{
@@ -51,7 +46,18 @@ const mixin={
 		},
 		clear (){
 			this.pageData.splice(0,this.pageData.length);
-		}
+		},
+		pullData () {
+			this.init();
+			let param=this.createApi();
+			let that=this;
+			this.getFromApi(param.url,param.option,function(data){
+				let dataList=data.data.data;
+				// if (dataList.length>0){
+					that.pageData=JSON.parse(JSON.stringify(dataList));
+				// }
+			})
+		},
 	}
 }
 

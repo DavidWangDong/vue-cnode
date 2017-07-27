@@ -24,5 +24,6 @@ export default {
 		left: 0;
 		overflow-y: auto;
 		overflow-x:hidden;
+		background: #eee;
 	}
 </style>

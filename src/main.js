@@ -3,8 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import mixin from './mixin'
+import time from './filters/time'
 
+Vue.filter('time_format',time);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
