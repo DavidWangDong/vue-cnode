@@ -18,6 +18,7 @@ export default {
 </script>
 
 <style>
+  @import url(fonts/iconfont.css);
   *{margin:0;padding: 0;}
   body{font-family: "微软雅黑";font-size: 14px;}
   a{text-decoration:none;color:#000;}

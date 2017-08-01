@@ -52,10 +52,13 @@ const mixin={
 			let param=this.createApi();
 			let that=this;
 			this.getFromApi(param.url,param.option,function(data){
-				let dataList=data.data.data;
-				// if (dataList.length>0){
+					let dataList=data.data.data;
+					let type=Object.prototype.toString.call(dataList);
+					if (type==='[object Object]'){
+						that.pageData.push(dataList);
+						return;
+					}
 					that.pageData=JSON.parse(JSON.stringify(dataList));
-				// }
 			})
 		},
 	}
