@@ -43,6 +43,7 @@ export default {
 		bottom: 0;
 		left: 0;
 		border-top:1px solid #ccc;
+    background: #fff;
 	}
 	.flex{
 		display: flex;

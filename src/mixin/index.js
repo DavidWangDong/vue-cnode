@@ -4,7 +4,7 @@ Vue.use(vueResource);
 const mixin={
 	data () {
 		return {
-			target:'https://www.vue-js.com/api/v1',
+			target:'https://cnodejs.org/api/v1',
 			page:1,
 			complete:false,
 			loading:false,
@@ -51,7 +51,8 @@ const mixin={
 			this.init();
 			let param=this.createApi();
 			let that=this;
-			this.getFromApi(param.url,param.option,function(data){
+			try {
+				this.getFromApi(param.url,param.option,function(data){
 					let dataList=data.data.data;
 					let type=Object.prototype.toString.call(dataList);
 					if (type==='[object Object]'){
@@ -59,7 +60,11 @@ const mixin={
 						return;
 					}
 					that.pageData=JSON.parse(JSON.stringify(dataList));
-			})
+				})
+			} catch (e){
+				
+			}
+			
 		},
 	}
 }

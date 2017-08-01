@@ -13,7 +13,7 @@
   				<span class=""></span>
   				<div class="topContent">
   					<div class="headInfo">
-  						<router-link :to="'/user/'+val.author_id"><img :src="val.author.avatar_url" class="avatar"></router-link>
+  						<router-link :to="'/user/'+val.author.loginname"><img :src="val.author.avatar_url" class="avatar"></router-link>
   					<!-- <p class="username">{{val.author.loginname}}</p> -->
 	  				</div>
 	  				<div class="topicContent">

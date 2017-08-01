@@ -14,10 +14,10 @@ export default {
     	listData:[
     		{name:'全部',link:'/'},
     		{name:'精华',link:'/?tab=good'},
-    		{name:'weex',link:'/?tab=weex'},
     		{name:'分享',link:'/?tab=share'},
     		{name:'问答',link:'/?tab=ask'},
-    		{name:'招聘',link:'/?task=job'}
+    		{name:'招聘',link:'/?task=job'},
+        {name:'测试',link:'/?tab=dev'},
     	]
     }
   },
@@ -60,6 +60,7 @@ export default {
 	display: flex;
 	height: 49px;
 	border-bottom: 1px solid #ccc;
+  background: #fff;
 }
 .topNav>li{
 	display: flex;

@@ -14,6 +14,6 @@ export default function (timeStr){
 	diff_time<limit_hour?Math.ceil(diff_time/limit_minum)+'小时前':
 	diff_time<limit_day?Math.ceil(diff_time/limit_hour)+'天前':
 	diff_time<limit_mounth?Math.ceil(diff_time/limit_day)+'个月前':
-	'年前';
+	Math.ceil(diff_time/limit_mounth)+'年前';
 	return str;
 }

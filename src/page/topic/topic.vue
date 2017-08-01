@@ -1,11 +1,12 @@
 <template>
+ <div class="wrap">
 	<div class="topicWrap">
 		<template  v-for="(val,index) in pageData">
 			<div class="topicHead">
 				<h4 class="title">{{val.title}}</h4>
 				<div class="topicInfo">
 					<div class="author">
-						<router-link :to="'user/'+val.author_id">
+						<router-link :to="'user/'+val.author.loginname">
 							<img :src="val.author.avatar_url">
 							<span>{{val.author.loginname}}</span>
 						</router-link>
@@ -23,7 +24,7 @@
 				<ul class="speakList">
 					<li class="speakCell" v-for="(reply,key) in val.replies">
 						<div class="cellHead">
-							<router-link :to="'user/'+val.author_id">
+							<router-link :to="'user/'+reply.author.loginname">
 								<img :src="reply.author.avatar_url">
 								<span>{{reply.author.loginname}}</span>
 							</router-link>
@@ -43,12 +44,14 @@
 				</ul>
 			</div>
 		</template>
-		<div class="topicFoot">
-			<span class="icon iconfont icon-back sideBtn"></span>
-			<span class="inputBtn">说点什么吧！</span>
-			<span class="icon iconfont icon-good sideBtn"></span>
-		</div>
+		
 	</div>
+	<div class="topicFoot">
+		<span class="icon iconfont icon-back sideBtn"></span>
+		<span class="inputBtn">说点什么吧！</span>
+		<span class="icon iconfont icon-good sideBtn"></span>
+	</div>
+</div>
 </template>
 
 <script type="text/javascript">
@@ -81,6 +84,7 @@
 		bottom: 50px;
 		overflow-x: hidden;
 		overflow-y: auto;
+		background: #fff;
 	}
 	.title{
 		font-size: 20px;
@@ -187,11 +191,12 @@
 	.topicFoot{
 		display: flex;
 		height: 49px;
-		position: fixed;
+		position: absolute;
 		bottom: 0;
 		border-top: 1px solid #ccc;
     	justify-content: space-around;
     	width: 100%;
+    	background: #fff;
 	}
 	.inputBtn{
 		height: 35px;
