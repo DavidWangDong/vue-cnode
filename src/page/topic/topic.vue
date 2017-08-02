@@ -6,7 +6,7 @@
 				<h4 class="title">{{val.title}}</h4>
 				<div class="topicInfo">
 					<div class="author">
-						<router-link :to="'user/'+val.author.loginname">
+						<router-link :to="'/user/'+val.author.loginname">
 							<img :src="val.author.avatar_url">
 							<span>{{val.author.loginname}}</span>
 						</router-link>
@@ -24,7 +24,7 @@
 				<ul class="speakList">
 					<li class="speakCell" v-for="(reply,key) in val.replies">
 						<div class="cellHead">
-							<router-link :to="'user/'+reply.author.loginname">
+							<router-link :to="'/user/'+reply.author.loginname">
 								<img :src="reply.author.avatar_url">
 								<span>{{reply.author.loginname}}</span>
 							</router-link>
@@ -59,6 +59,13 @@
 	export default{
 		name:'topic',
 		mixins:[mixin],
+		updated (){
+			let el=this.$el;
+			let aList=document.querySelectorAll('.cellBody a');
+			for (let i=0,len=aList.length;i<len;i++){
+				aList[i].href='#'+aList[i].pathname;
+			}
+		},
 		data (){
 			let that=this;
 			return {

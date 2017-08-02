@@ -1,8 +1,6 @@
 <template>
 	<div class="wrap">
-		<div class="home">
-			home is home
-		</div>
+		<user-home :pagedata="pageData" :username="user" :target="target"></user-home>
 		<v-footer></v-footer>
 	</div>
 	
@@ -11,22 +9,17 @@
 <script type="text/javascript">
 	import vFooter from '@/components/footer'
 	import mixin from '@/mixin'
+	import userHome from '@/components/userhome'
 	export default{
 		name:'home',
 		mixins:[mixin],
-		components:{vFooter},
+		components:{vFooter,userHome},
 		data (){
 			let that=this;
 			return {
 				api:'/user/i5ting',
+				user:'i5ting'
 			}
 		},
-		methods:{
-			
-		}
 	}
 </script>
-
-<style type="text/css" scoped>
-	
-</style>
