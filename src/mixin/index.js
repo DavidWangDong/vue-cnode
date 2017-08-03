@@ -20,6 +20,9 @@ const mixin={
 	watch:{
 		$route (news,old) {
 			this.pullData();
+		},
+		api () {
+			this.pullData();
 		}
 	},
 	methods:{

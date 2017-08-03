@@ -1,19 +1,48 @@
 <template>
   <div id="app" v-fullheight>
-    <router-view></router-view>
+    <router-view @showmodel="showModel"></router-view>
+    <model-view :modelClass="modelClass" :modelType="modelType" :modelShow="modelShow" :modelMassage="modelMassage" @hidemodel="hideModel" :toUrl="toUrl"></model-view>
   </div>
 </template>
 
 <script>
+
+import modelView from '@/components/modelView'
+
 export default {
   name: 'app',
+  components:{modelView},
+  data () {
+     return {
+        modelClass:'',
+        modelType:'',
+        modelShow:false,
+        modelMassage:'',
+        toUrl:''
+     }
+  },
   directives:{
     fullheight:{
       bind (el,binding,vnode) {
           el.style.height=window.innerHeight+'px';
       }
     }
-  }
+  },
+  methods:{
+    showModel (data) {
+      Object.keys(data).forEach((key)=>{
+        this[key]=data[key];
+      });
+      if (data.modelType=='tost'){
+        setTimeout(()=>{
+          this.hideModel();
+        },1000)
+      }
+    },
+    hideModel () {
+      this.modelShow=false;
+    }
+  },
 }
 </script>
 

@@ -9,7 +9,7 @@
 						<span class="username">{{val.loginname}}</span>
 						<span class="usescore">积分:{{val.score}}/注册于:{{val.create_at|time_format}}</span>
 					</div>
-					<span class="icon iconfont icon-signout signout" v-if="!type"></span>
+					<span class="icon iconfont icon-signout signout" v-if="!type" @click="loginOut"></span>
 				</div>
 				<div class="homeBody" :style="{top:type?'110px':'70px',bottom:type?'0':'50px'}">
 					<ul class="topic_type" @click="changeTab($event)">
@@ -53,12 +53,6 @@
 	export default {
 		name:'userhome',
 		props:['pagedata','username','target','type'],
-		mounted (){
-			// let that=this;
-			// this.$http.get(this.target+'/topic_collect/'+this.username,{}).then(function (data) {
-			// 		that.collect=data.data.data;
-			// })
-		},
 		data (){
 			return {
 				activeClass:'about',
@@ -100,6 +94,10 @@
 					return;
 				}
 				this.activeClass=el.type;
+			},
+			loginOut () {
+				this.$store.commit('unlogin');
+				this.$router.push({name:'login'});
 			}
 		}
 	}

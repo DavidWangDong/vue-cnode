@@ -1,6 +1,6 @@
 <template>
 	<div class="wrap">	
-		<user-home-head></user-home-head>		
+		<user-home-head :title="title"></user-home-head>		
 		<user-home :pagedata="pageData" :username="user" :target="target" :type="type"></user-home>
 	</div>	
 </template>
@@ -18,7 +18,8 @@
 			return {
 				api:that.$route.fullPath,
 				user:that.$route.params.name,
-				type:'info'
+				type:'info',
+				title:'个人详情页'
 			}
 		},
 	}

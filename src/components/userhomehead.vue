@@ -2,7 +2,7 @@
 	<div class="wrap">
 		<div class="header">
 			<span class="icon iconfont icon-back back"></span>
-			<span class="title">个人详情</span>
+			<span class="title">{{title}}</span>
 		</div>
 	</div>
 </template>
@@ -10,6 +10,7 @@
 <script type="text/javascript">
 	
 	export default {
+		props:['title'],
 		data () {
 
 			return {
