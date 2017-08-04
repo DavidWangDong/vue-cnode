@@ -48,7 +48,7 @@
 	</div>
 	<div class="topicFoot" v-for="(val,index) in pageData">
 		<span class="icon iconfont icon-back sideBtn" @click.self="$router.back()"></span>
-		<span class="inputBtn">说点什么吧！</span>
+		<span class="inputBtn" @click="to_comment(val);">说点什么吧！</span>
 		<span :class="[{sideBtn:true},{icon:true},{iconfont:true},{'icon-good':true},{'iconBig':true},{'active':isCollect(val.id)}]" @click.self="toDoCollect(val.id,val)"></span>
 	</div>
 </div>
@@ -95,16 +95,26 @@
 					if (data.ok){
 						if (data.data.success===true){
 							if(data.data.action=='up'){
-			  					that.show_model('tost','点赞成功！');
+			  					that.show_model({type:'tost',msg:'点赞成功！'});
 			  					up_arr.push(that.$store.state.userid);
 							}else if(data.data.action){
-								that.show_model('tost','取消点赞！');
+								that.show_model({type:'tost',msg:'取消点赞！'});
 			  					up_arr.splice(up_arr.indexOf(that.$store.state.userid),1);
 							}
 						}else{
-							that.show_model('tost','操作失败！');
+							that.show_model({type:'tost',msg:'操作失败！'});
 						}
 					}
+				});
+			},
+			to_comment (topic) {
+				if (this.redirect_to_login()===false){
+					return false;
+				}
+				this.show_model({
+					type:'comment',
+					msg:'请输入您的评论！',
+					topic_id:topic.id
 				});
 			}
 		},

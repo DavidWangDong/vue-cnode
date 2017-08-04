@@ -1,7 +1,7 @@
 <template>
 	<div :class="[{modelHover:true},modelClass]" v-if="modelShow" @click.self="hideModel">
 
-		<div class="tost" v-if="modelType=='tost'">
+		<div class="tost" v-if="modelType.indexOf('tost')>-1">
 			{{modelMassage}}
 		</div>
 
@@ -17,6 +17,17 @@
 			</ul>
 		</div>
 
+		<div class="comment" v-if="modelType.indexOf('comment')>-1">
+			<div class="commentWrap">
+				<textarea class="commentInfo" :placeholder="modelMassage" v-model="comment">
+					
+				</textarea>
+			</div>
+			<div class="subBtn" @click="to_sub">
+				<span class="iconfont icon-edit" ></span>发表
+			</div>
+		</div>
+
 	</div>
 </template>	
 <script type="text/javascript">
@@ -26,7 +37,7 @@
 		props:['modelClass','modelType','modelShow','modelMassage','toUrl'],
 		data () {
 			return {
-				
+				comment:''
 			}
 		},
 		methods:{
@@ -42,7 +53,21 @@
 			},
 			cancel () {
 				this.hideModel();
-			}
+			},
+			to_sub () {
+		      if (this.comment==''){
+		      	let param={type:'tost,comment',msg:'评论不能为空！'};
+		      	this.$parent.showModel(
+		      			{
+			  				modelClass:param.type+'Class',
+					        modelType:param.type.split(','),
+					        modelShow:true,
+					        modelMassage:param.msg,
+					        toUrl:param.url
+				  		}
+		      		)
+		      }
+		    }
 		}
 	}
 </script>
@@ -100,5 +125,34 @@
 	}
 	.btnWrap li:first-child{
 		border-right:1px solid #fff;
+	}
+	.comment{
+		    width: 70%;
+    		margin: 0 auto;
+    		box-shadow: 0 0 5px #80bd01;
+	}
+	.commentWrap{
+		    min-height: 170px;
+		    background: #fff;
+		    padding: 5px;
+		    box-sizing: border-box;
+	}
+	.commentInfo{
+		    display: block;
+		    height: 160px;
+		    width: 100%;
+		    background: #eff2f7;
+		    outline: none;
+		    resize: none;
+		    border: none;
+		    font-size: 15px;
+	}
+	.subBtn{
+		height: 30px;
+	    background: #80bd01;
+	    color: #fff;
+	    text-align: center;
+	    line-height: 30px;
+	    font-size: 16px;
 	}
 </style>

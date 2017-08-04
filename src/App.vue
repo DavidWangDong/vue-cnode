@@ -15,10 +15,10 @@ export default {
   data () {
      return {
         modelClass:'',
-        modelType:'',
+        modelType:[],
         modelShow:false,
         modelMassage:'',
-        toUrl:''
+        toUrl:'',
      }
   },
   directives:{
@@ -33,15 +33,17 @@ export default {
       Object.keys(data).forEach((key)=>{
         this[key]=data[key];
       });
-      if (data.modelType=='tost'){
+      console.log(this.modelType);
+      if (this.modelType.indexOf('tost')>-1){
         setTimeout(()=>{
-          this.hideModel();
+          this.modelType.splice(this.modelType.indexOf('tost'),1);
         },1000)
       }
     },
     hideModel () {
       this.modelShow=false;
-    }
+    },
+
   },
 }
 </script>

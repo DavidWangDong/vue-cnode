@@ -80,7 +80,7 @@ const mixin={
 	  			this.$http.post(this.target+'/topic_collect/de_collect',{accesstoken:this.$store.state.accesstoken,topic_id:id}).then(function(data){
 		  			let msg='取消收藏！'
 		  			if (!(data.ok&&data.success)){
-			  			this.show_model('tost',msg);
+			  			this.show_model({type:'tost',msg:msg});
 		  				that.$store.commit('del_collect',id);
 		  			}
 	  			})
@@ -93,7 +93,7 @@ const mixin={
 	  			}else{
 	  				that.$store.commit('add_collect',val);
 	  			}
-	  			this.show_model('tost',msg);
+	  			this.show_model({type:'tost',msg:msg});
 	  		})
   		},
   		isCollect (id) {
@@ -107,17 +107,23 @@ const mixin={
   		redirect_to_login () {
   			let that=this
 	  		if (!this.$store.state.loginFlag) {
-	  			this.show_model('confirm','亲~您还没有登录,请先登录哦！','/login');
+	  			this.show_model(
+	  					{
+	  						type:'confirm',
+	  						msg:'亲~您还没有登录,请先登录哦！',
+	  						url:'/login'
+	  					}
+	  				);
 	  			return false;
 	  		}
   		},
-  		show_model (type,msg,url) {
+  		show_model (param) {
   			this.$emit('showmodel',{
-  				modelClass:type+'Class',
-		        modelType:type,
+  				modelClass:param.type+'Class',
+		        modelType:param.type.split(','),
 		        modelShow:true,
-		        modelMassage:msg,
-		        toUrl:url
+		        modelMassage:param.msg,
+		        toUrl:param.url
 	  		})
   		}
 	}
