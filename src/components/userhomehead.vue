@@ -1,7 +1,7 @@
 <template>
 	<div class="wrap">
 		<div class="header">
-			<span class="icon iconfont icon-back back"></span>
+			<span class="icon iconfont icon-back back" @click.self="$router.back()"></span>
 			<span class="title">{{title}}</span>
 		</div>
 	</div>
