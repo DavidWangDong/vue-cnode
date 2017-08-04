@@ -35,7 +35,7 @@
 							
 						</div>
 						<div class="cellFoot">
-							<span class="icon iconfont icon-comment-fabulous">
+							<span class="icon iconfont icon-comment-fabulous" @click="to_up_down(reply.id,reply.ups);">
 								<span :class="{ups:true,active:isActive(reply.ups)}"  v-if="reply.ups.length>0">{{reply.ups.length}}</span>
 							</span>
 							<span class="icon iconfont icon-comment-topic"></span>
@@ -74,10 +74,41 @@
 		},
 		methods:{
 			isActive (data){
-				console.log(data);
-				return true;
+				if (!this.$store.state.loginFlag) {
+					return false;
+				}
+				let res=false;
+				data.forEach((tmp)=>{
+					this.$store.state.userid==tmp&&(res=true);
+					return;
+				});
+				return res;
+			},
+			to_up_down (reply_id,up_arr){
+				console.log(reply_id,up_arr);
+				let that=this;
+				if (this.redirect_to_login()===false){
+					return false;
+				}
+				
+				this.$http.post(this.target+'/reply/'+reply_id+'/ups',{accesstoken:this.$store.state.accesstoken}).then(function(data){
+					if (data.ok){
+						if (data.data.success===true){
+							if(data.data.action=='up'){
+			  					that.show_model('tost','点赞成功！');
+			  					up_arr.push(that.$store.state.userid);
+							}else if(data.data.action){
+								that.show_model('tost','取消点赞！');
+			  					up_arr.splice(up_arr.indexOf(that.$store.state.userid),1);
+							}
+						}else{
+							that.show_model('tost','操作失败！');
+						}
+					}
+				});
 			}
-		}
+		},
+
 	}
 </script>
 

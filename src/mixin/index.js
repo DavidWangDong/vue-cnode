@@ -72,28 +72,15 @@ const mixin={
 		},
 		toDoCollect (id,val) {
 	  		let that=this
-	  		if (!this.$store.state.loginFlag) {
-	  			this.$emit('showmodel',{
-	  				modelClass:'confirmClass',
-			        modelType:'confirm',
-			        modelShow:true,
-			        modelMassage:'亲~您还没有登录,请先登录,再收藏哦！',
-			        toUrl:'/login'
-	  			})
-	  			return;
+	  		if (this.redirect_to_login()===false) {
+	  			return false;
 	  		}
 	  		if (hasCollect(id)){
 	  			
 	  			this.$http.post(this.target+'/topic_collect/de_collect',{accesstoken:this.$store.state.accesstoken,topic_id:id}).then(function(data){
 		  			let msg='取消收藏！'
 		  			if (!(data.ok&&data.success)){
-		  				this.$emit('showmodel',{
-			  				modelClass:'tostClass',
-					        modelType:'tost',
-					        modelShow:true,
-					        modelMassage:msg,
-					        toUrl:''
-			  			});
+			  			this.show_model('tost',msg);
 		  				that.$store.commit('del_collect',id);
 		  			}
 	  			})
@@ -106,14 +93,7 @@ const mixin={
 	  			}else{
 	  				that.$store.commit('add_collect',val);
 	  			}
-
-	  			this.$emit('showmodel',{
-		  				modelClass:'tostClass',
-				        modelType:'tost',
-				        modelShow:true,
-				        modelMassage:msg,
-				        toUrl:''
-		  			})
+	  			this.show_model('tost',msg);
 	  		})
   		},
   		isCollect (id) {
@@ -124,6 +104,22 @@ const mixin={
 					}
 			}
   		},
+  		redirect_to_login () {
+  			let that=this
+	  		if (!this.$store.state.loginFlag) {
+	  			this.show_model('confirm','亲~您还没有登录,请先登录哦！','/login');
+	  			return false;
+	  		}
+  		},
+  		show_model (type,msg,url) {
+  			this.$emit('showmodel',{
+  				modelClass:type+'Class',
+		        modelType:type,
+		        modelShow:true,
+		        modelMassage:msg,
+		        toUrl:url
+	  		})
+  		}
 	}
 }
 

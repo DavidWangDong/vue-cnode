@@ -63,7 +63,7 @@ export default {
   			return tab=='ask'?'问答':
   				   tab=='share'?'分享':
   				   tab=='job'?'招聘':
-  				   tab=='ask'?'问答':'week';
+  				   tab=='ask'?'问答':'测试';
   	}
   },
   methods:{
