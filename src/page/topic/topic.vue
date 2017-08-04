@@ -46,10 +46,10 @@
 		</template>
 		
 	</div>
-	<div class="topicFoot">
-		<span class="icon iconfont icon-back sideBtn"></span>
+	<div class="topicFoot" v-for="(val,index) in pageData">
+		<span class="icon iconfont icon-back sideBtn" @click.self="$router.back()"></span>
 		<span class="inputBtn">说点什么吧！</span>
-		<span class="icon iconfont icon-good sideBtn"></span>
+		<span :class="[{sideBtn:true},{icon:true},{iconfont:true},{'icon-good':true},{'iconBig':true},{'active':isCollect(val.id)}]" @click.self="toDoCollect(val.id,val)"></span>
 	</div>
 </div>
 </template>

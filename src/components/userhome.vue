@@ -65,6 +65,10 @@
 				if (news!=='collect'){
 					return;
 				}
+				if (this.$store.state.loginFlag&&!this.type) {
+					this.collect=JSON.parse(JSON.stringify(this.$store.getters.colList));
+					return ;
+				}	
 				let that=this;
 				this.$http.get(this.target+'/topic_collect/'+this.username,{}).then(function (data) {
 						that.collect=data.data.data;

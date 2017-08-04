@@ -62,4 +62,7 @@ export default {
     margin:0 auto;
     position: relative;
   }
+  .icon.active{
+    color:#80bd01 !important;
+  }
 </style>

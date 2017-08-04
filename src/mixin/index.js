@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import vueResource from 'vue-resource';
+import hasCollect from '@/filters/hasCollected'
 Vue.use(vueResource);
 const mixin={
 	data () {
@@ -69,6 +70,60 @@ const mixin={
 			}
 			
 		},
+		toDoCollect (id,val) {
+	  		let that=this
+	  		if (!this.$store.state.loginFlag) {
+	  			this.$emit('showmodel',{
+	  				modelClass:'confirmClass',
+			        modelType:'confirm',
+			        modelShow:true,
+			        modelMassage:'亲~您还没有登录,请先登录,再收藏哦！',
+			        toUrl:'/login'
+	  			})
+	  			return;
+	  		}
+	  		if (hasCollect(id)){
+	  			
+	  			this.$http.post(this.target+'/topic_collect/de_collect',{accesstoken:this.$store.state.accesstoken,topic_id:id}).then(function(data){
+		  			let msg='取消收藏！'
+		  			if (!(data.ok&&data.success)){
+		  				this.$emit('showmodel',{
+			  				modelClass:'tostClass',
+					        modelType:'tost',
+					        modelShow:true,
+					        modelMassage:msg,
+					        toUrl:''
+			  			});
+		  				that.$store.commit('del_collect',id);
+		  			}
+	  			})
+	  			return;
+	  		}
+	  		this.$http.post(this.target+'/topic_collect/collect',{accesstoken:this.$store.state.accesstoken,topic_id:id}).then(function(data){
+	  			let msg='收藏成功！'
+	  			if (!(data.ok&&data.data.success)){
+	  				msg="收藏失败！"
+	  			}else{
+	  				that.$store.commit('add_collect',val);
+	  			}
+
+	  			this.$emit('showmodel',{
+		  				modelClass:'tostClass',
+				        modelType:'tost',
+				        modelShow:true,
+				        modelMassage:msg,
+				        toUrl:''
+		  			})
+	  		})
+  		},
+  		isCollect (id) {
+	  		let arr=this.$store.getters.colList;
+	  		for (let i=0,len=arr.length;i<len;i++){
+					if (arr[i].id==id){
+						return true;
+					}
+			}
+  		},
 	}
 }
 

@@ -32,7 +32,6 @@
 					let param=JSON.parse(JSON.stringify(data.data));
 					param.accesstoken=this.id;
 					this.$store.commit('login',param);
-					this.$emit('logged');
 					this.$router.back();
 				})
 			}
