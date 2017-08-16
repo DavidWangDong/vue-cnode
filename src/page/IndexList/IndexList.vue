@@ -48,6 +48,7 @@ import vNav from '@/components/nav'
 import vFooter from '@/components/footer'
 import vContent from '@/components/content'
 import mixin from '@/mixin'
+import $ from 'jQuery'
 export default {
   name: 'index',
   mixins:[mixin],
@@ -67,6 +68,9 @@ export default {
   	}
   },
   methods:{
+  	to_pull_data (e) {
+  		console.log(e);
+  	}
   }
 }
 </script>

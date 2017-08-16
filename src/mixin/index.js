@@ -66,7 +66,7 @@ const mixin={
 						that.pageData.push(dataList);
 						return;
 					}
-					that.pageData=JSON.parse(JSON.stringify(dataList));
+					that.pageData=that.pageData.concat(JSON.parse(JSON.stringify(dataList)));
 				})
 			} catch (e){
 				
