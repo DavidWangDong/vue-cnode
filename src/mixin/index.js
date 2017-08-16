@@ -56,6 +56,9 @@ const mixin={
 			let param=this.createApi();
 			let that=this;
 			try {
+				if (param.isDo===false){
+					return;
+				}
 				this.getFromApi(param.url,param.option,function(data){
 					let dataList=data.data.data;
 					let type=Object.prototype.toString.call(dataList);
@@ -80,7 +83,7 @@ const mixin={
 	  			this.$http.post(this.target+'/topic_collect/de_collect',{accesstoken:this.$store.state.accesstoken,topic_id:id}).then(function(data){
 		  			let msg='取消收藏！'
 		  			if (!(data.ok&&data.success)){
-			  			this.show_model({type:'tost',msg:msg});
+			  			that.$emit('showtost',msg);
 		  				that.$store.commit('del_collect',id);
 		  			}
 	  			})
@@ -93,7 +96,7 @@ const mixin={
 	  			}else{
 	  				that.$store.commit('add_collect',val);
 	  			}
-	  			this.show_model({type:'tost',msg:msg});
+	  			that.$emit('showtost',msg);
 	  		})
   		},
   		isCollect (id) {
@@ -123,7 +126,8 @@ const mixin={
 		        modelType:param.type.split(','),
 		        modelShow:true,
 		        modelMassage:param.msg,
-		        toUrl:param.url
+		        toUrl:param.url,
+		        hasMsg:param.hasMsg?param.hasMsg:false,
 	  		})
   		}
 	}

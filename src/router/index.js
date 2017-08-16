@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import IndexList from '@/page/IndexList/IndexList'
 import topic from '@/page/topic/topic'
 import home from '@/page/my/home'
+import messages from '@/page/my/messages'
 import user from '@/page/user/userinfo'
 import login from '@/page/login/loginpage'
 import store from '@/store'
@@ -29,6 +30,14 @@ const router = new Router({
         needLogin:true
       },
       component: home
+    },
+    {
+      path: '/my/messages',
+      name: 'messages',
+      meta:{
+        needLogin:true
+      },
+      component: messages
     },
     {
       path: '/user/:name',

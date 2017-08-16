@@ -1,17 +1,21 @@
 <template>
   <div id="app" v-fullheight>
-    <router-view @showmodel="showModel"></router-view>
-    <model-view :modelClass="modelClass" :modelType="modelType" :modelShow="modelShow" :modelMassage="modelMassage" @hidemodel="hideModel" :toUrl="toUrl"></model-view>
+    <template>
+      <router-view @showmodel="showModel"  @showtost="showTost"></router-view>
+      <model-view :modelClass="modelClass" :modelType="modelType" :modelShow="modelShow" :modelMassage="modelMassage" @hidemodel="hideModel" :toUrl="toUrl" @showtost="showTost" @comment="comment_topic" :hasMsg="hasMsg"></model-view>
+    </template>
+    <tost-view v-for="(val,index) in messageList" :message="val" :key="index"></tost-view>
   </div>
 </template>
 
 <script>
 
 import modelView from '@/components/modelView'
+import tostView from '@/components/tostView'
 
 export default {
   name: 'app',
-  components:{modelView},
+  components:{modelView,tostView},
   data () {
      return {
         modelClass:'',
@@ -19,6 +23,9 @@ export default {
         modelShow:false,
         modelMassage:'',
         toUrl:'',
+        messageList:[],
+        url:'https://cnodejs.org/api/v1',
+        hasMsg:false
      }
   },
   directives:{
@@ -33,17 +40,25 @@ export default {
       Object.keys(data).forEach((key)=>{
         this[key]=data[key];
       });
-      console.log(this.modelType);
-      if (this.modelType.indexOf('tost')>-1){
-        setTimeout(()=>{
-          this.modelType.splice(this.modelType.indexOf('tost'),1);
-        },1000)
-      }
     },
     hideModel () {
       this.modelShow=false;
     },
-
+    showTost (message) {
+        this.messageList.push(message);
+        setTimeout(()=>{
+          let del_index=this.messageList.indexOf(message);
+          this.messageList.splice(del_index,1);
+        },800)
+    },
+    comment_topic (message) {
+      this.$http.post(this.url+/topic/+this.$store.state.curr_topic_id+'/replies',{accesstoken:this.$store.state.accesstoken,content:message,reply_id:this.$store.state.curr_reply_id}).then((data)=>{
+          this.$router.replace({path:this.$route.path,query:{type:'reload',key:Math.ceil(Math.random()*100)}});
+          this.hideModel();
+      },(data)=>{
+        this.showTost(data.data.error_msg);
+      })
+    }
   },
 }
 </script>
@@ -66,5 +81,37 @@ export default {
   }
   .icon.active{
     color:#80bd01 !important;
+  }
+</style>
+<style type="text/css">
+  .markdown-text{
+    padding: 0 10px;
+  }
+  .markdown-text p{
+        margin: 10px 0px;
+        line-height: 27px;
+  }
+  .markdown-text p img{
+    display: block;
+  }
+  .markdown-text .prettyprint{
+    background: #ccc;
+    overflow-x: auto;
+    line-height: 24px;
+  }
+  .markdown-text img{
+    max-width: 100%;
+  }
+  .markdown-text h2{
+    margin: 10px 0;
+  }
+  .markdown-text h1{
+    margin: 15px 0;
+  }
+  .markdown-text a{
+    color:#ea0bd8;
+  }
+  .markdown-text ul{
+    padding-left: 20px;
   }
 </style>

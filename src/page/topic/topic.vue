@@ -38,7 +38,7 @@
 							<span class="icon iconfont icon-comment-fabulous" @click="to_up_down(reply.id,reply.ups);">
 								<span :class="{ups:true,active:isActive(reply.ups)}"  v-if="reply.ups.length>0">{{reply.ups.length}}</span>
 							</span>
-							<span class="icon iconfont icon-comment-topic"></span>
+							<span class="icon iconfont icon-comment-topic" @click="to_comment(val,reply)"></span>
 						</div>
 					</li>
 				</ul>
@@ -85,37 +85,43 @@
 				return res;
 			},
 			to_up_down (reply_id,up_arr){
-				console.log(reply_id,up_arr);
 				let that=this;
 				if (this.redirect_to_login()===false){
 					return false;
 				}
 				
 				this.$http.post(this.target+'/reply/'+reply_id+'/ups',{accesstoken:this.$store.state.accesstoken}).then(function(data){
-					if (data.ok){
-						if (data.data.success===true){
+					
 							if(data.data.action=='up'){
-			  					that.show_model({type:'tost',msg:'点赞成功！'});
+			  					
+			  					that.$emit('showtost','点赞成功！')
 			  					up_arr.push(that.$store.state.userid);
 							}else if(data.data.action){
-								that.show_model({type:'tost',msg:'取消点赞！'});
+							
+								that.$emit('showtost','取消点赞！')
 			  					up_arr.splice(up_arr.indexOf(that.$store.state.userid),1);
 							}
-						}else{
-							that.show_model({type:'tost',msg:'操作失败！'});
-						}
-					}
-				});
+						
+				},function(data){
+					that.$emit('showtost',data.data.error_msg);
+				})
 			},
-			to_comment (topic) {
+			to_comment (topic,reply) {
 				if (this.redirect_to_login()===false){
 					return false;
 				}
+				let msg="请输入您的评论！"
+				let hasMsg=false;
+				if (reply){
+					msg='@'+reply.author.loginname;
+					this.$store.commit('set_curr',{key:'curr_reply_id',id:reply.id});
+				}
 				this.show_model({
 					type:'comment',
-					msg:'请输入您的评论！',
-					topic_id:topic.id
+					msg:msg,
+					hasMsg:true
 				});
+				this.$store.commit('set_curr',{key:'curr_topic_id',id:topic.id});
 			}
 		},
 
@@ -260,37 +266,5 @@
 		    align-self: center;
 		    font-size: 32px;
 		    line-height: 49px;
-	}
-</style>
-<style type="text/css">
-	.markdown-text{
-		padding: 0 10px;
-	}
-	.markdown-text p{
-		    margin: 10px 0px;
-    		line-height: 27px;
-	}
-	.markdown-text p img{
-		display: block;
-	}
-	.markdown-text .prettyprint{
-		background: #ccc;
-		overflow-x: auto;
-		line-height: 24px;
-	}
-	.markdown-text img{
-		max-width: 100%;
-	}
-	.markdown-text h2{
-		margin: 10px 0;
-	}
-	.markdown-text h1{
-		margin: 15px 0;
-	}
-	.markdown-text a{
-		color:#ea0bd8;
-	}
-	.markdown-text ul{
-		padding-left: 20px;
 	}
 </style>

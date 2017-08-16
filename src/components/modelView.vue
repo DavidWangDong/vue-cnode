@@ -1,10 +1,6 @@
 <template>
 	<div :class="[{modelHover:true},modelClass]" v-if="modelShow" @click.self="hideModel">
 
-		<div class="tost" v-if="modelType.indexOf('tost')>-1">
-			{{modelMassage}}
-		</div>
-
 		<div class="confirm" v-if="modelType=='confirm'">
 			<div class="massageWrap">
 				<span>
@@ -17,7 +13,7 @@
 			</ul>
 		</div>
 
-		<div class="comment" v-if="modelType.indexOf('comment')>-1">
+		<div class="comment" v-if="modelType=='comment'">
 			<div class="commentWrap">
 				<textarea class="commentInfo" :placeholder="modelMassage" v-model="comment">
 					
@@ -34,7 +30,7 @@
 	
 	export default{
 		name:'modelView',
-		props:['modelClass','modelType','modelShow','modelMassage','toUrl'],
+		props:['modelClass','modelType','modelShow','modelMassage','toUrl','hasMsg'],
 		data () {
 			return {
 				comment:''
@@ -56,17 +52,14 @@
 			},
 			to_sub () {
 		      if (this.comment==''){
-		      	let param={type:'tost,comment',msg:'评论不能为空！'};
-		      	this.$parent.showModel(
-		      			{
-			  				modelClass:param.type+'Class',
-					        modelType:param.type.split(','),
-					        modelShow:true,
-					        modelMassage:param.msg,
-					        toUrl:param.url
-				  		}
-		      		)
+		      	this.$emit('showtost','评论不能为空！');
+		      	return ;
 		      }
+		      if (this.hasMsg){
+		      	this.comment=this.modelMassage+this.comment;
+		      }
+		      this.$emit('comment',this.comment);
+		      this.comment='';
 		    }
 		}
 	}
@@ -95,6 +88,9 @@
 		background: rgba(0,0,0,0.5);
 		margin:0 auto;
 		border-radius: 5px;
+		position: absolute;
+		left: 50%;
+		margin-left: -25%;
 	}
 	.confirm{
 		    width: 60%;

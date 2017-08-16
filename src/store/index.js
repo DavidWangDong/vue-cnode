@@ -8,7 +8,9 @@ const store = new Vuex.Store({
 		username:'',
 		tmpUrl:'',
 		accesstoken:'',
-		collect_list:[]
+		collect_list:[],
+		curr_topic_id:'',
+		curr_reply_id:''
 	},
 	mutations:{
 		login (state,param){
@@ -44,6 +46,9 @@ const store = new Vuex.Store({
 		add_collect (state,val) {
 			state.collect_list.push(val);
 		},
+		set_curr (state,param){
+			state[param.key]=param.id;
+		}
 	},
 	getters : {
 		getUserUrl (state) {

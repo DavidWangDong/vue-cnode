@@ -22,5 +22,13 @@
 				title:'个人详情页'
 			}
 		},
+		computed:{
+			HomeisShow () {
+				return this.$store.state.loginFlag;
+			},
+			loginShow () {
+				return !this.$store.state.loginFlag;
+			}
+		}
 	}
 </script>
