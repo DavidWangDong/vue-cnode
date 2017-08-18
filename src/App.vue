@@ -12,7 +12,7 @@
 
 import modelView from '@/components/modelView'
 import tostView from '@/components/tostView'
-import $ from 'jQuery'
+
 
 export default {
   name: 'app',

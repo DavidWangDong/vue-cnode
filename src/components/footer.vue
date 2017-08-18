@@ -16,7 +16,7 @@ export default {
     return {
     	listData:[
     		{name:'主页',link:'/',iconClass:'iconfont icon-index'},
-    		{name:'发表',link:'/topic/create',iconClass:'iconfont icon-edit'},
+    		{name:'发表',link:'/createtopic',iconClass:'iconfont icon-edit'},
     		{name:'消息',link:'/my/messages',iconClass:'iconfont icon-msg'},
     		{name:'我的',link:'/my/home',iconClass:'iconfont icon-user'},
     	],

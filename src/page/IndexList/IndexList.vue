@@ -1,43 +1,46 @@
 <template>
   <div class="wrap">
   	<v-nav></v-nav>
-  	<v-content>
-  		<ul class="listWrap">
-  			<li v-for="(val,index) in pageData">
-  				<div class="topSpecial">
-  					
-  					<span class="icon iconfont icon-topic-top topicTop topicSpecial" v-if="val.top"></span>
-  					<span class="icon iconfont icon-topic-good topicGood topicSpecial" v-if="val.good"></span>
-  					<span class="topTab">#{{val.tab|tabFilter}}#</span>
-  				</div>
-  				<span class=""></span>
-  				<div class="topContent">
-  					<div class="headInfo">
-  						<router-link :to="'/user/'+val.author.loginname"><img :src="val.author.avatar_url" class="avatar"></router-link>
-  					<!-- <p class="username">{{val.author.loginname}}</p> -->
+  	<v-content v-scroll>
+  		<div>
+	  		<ul class="listWrap">
+	  			<li v-for="(val,index) in pageData">
+	  				<div class="topSpecial">
+	  					
+	  					<span class="icon iconfont icon-topic-top topicTop topicSpecial" v-if="val.top"></span>
+	  					<span class="icon iconfont icon-topic-good topicGood topicSpecial" v-if="val.good"></span>
+	  					<span class="topTab">#{{val.tab|tabFilter}}#</span>
 	  				</div>
-	  				<div class="topicContent">
-	  					<router-link :to="'/topic/'+val.id"><h6 class='title'>{{val.title}}</h6></router-link>
-	  					<p class="create_time">{{val.last_reply_at|time_format}}</p>
+	  				<span class=""></span>
+	  				<div class="topContent">
+	  					<div class="headInfo">
+	  						<router-link :to="'/user/'+val.author.loginname"><img :src="val.author.avatar_url" class="avatar"></router-link>
+	  					<!-- <p class="username">{{val.author.loginname}}</p> -->
+		  				</div>
+		  				<div class="topicContent">
+		  					<router-link :to="'/topic/'+val.id"><h6 class='title'>{{val.title}}</h6></router-link>
+		  					<p class="create_time">{{val.last_reply_at|time_format}}</p>
+		  				</div>
 	  				</div>
-  				</div>
-  				<div class="bottomContent">
-  					<ul>
-  						<li>
-  							<span class="icon iconfont icon-click iconBig"></span>
-  							<span class="count">{{val.visit_count}}</span>
-  						</li>
-  						<li>
-  							<span class="icon iconfont icon-comment iconBig"></span>
-  							<span class="count">{{val.reply_count}}</span>
-  						</li>
-  						<li>
-  							<span :class="[{icon:true},{iconfont:true},{'icon-good':true},{'iconBig':true},{'active':isCollect(val.id)}]" @click.self="toDoCollect(val.id,val)"></span>
-  						</li>
-  					</ul>
-  				</div>
-  			</li>
-  		</ul>
+	  				<div class="bottomContent">
+	  					<ul>
+	  						<li>
+	  							<span class="icon iconfont icon-click iconBig"></span>
+	  							<span class="count">{{val.visit_count}}</span>
+	  						</li>
+	  						<li>
+	  							<span class="icon iconfont icon-comment iconBig"></span>
+	  							<span class="count">{{val.reply_count}}</span>
+	  						</li>
+	  						<li>
+	  							<span :class="[{icon:true},{iconfont:true},{'icon-good':true},{'iconBig':true},{'active':isCollect(val.id)}]" @click.self="toDoCollect(val.id,val)"></span>
+	  						</li>
+	  					</ul>
+	  				</div>
+	  			</li>
+	  		</ul>
+  			<loading :load="loading"></loading>
+  		</div>
   	</v-content>
   	<v-footer></v-footer>
   </div>
@@ -49,10 +52,11 @@ import vFooter from '@/components/footer'
 import vContent from '@/components/content'
 import mixin from '@/mixin'
 import $ from 'jQuery'
+import loading from '@/components/loading'
 export default {
   name: 'index',
   mixins:[mixin],
-  components:{vNav,vFooter,vContent},
+  components:{vNav,vFooter,vContent,loading},
   
   data () {
     return {
@@ -67,10 +71,33 @@ export default {
   				   tab=='ask'?'问答':'测试';
   	}
   },
-  methods:{
-  	to_pull_data (e) {
-  		console.log(e);
+  directives:{
+  	scroll :{
+  		bind (el,binding,vnode) {
+  			let timer=null;
+  			$(el).on('scroll',(e)=>{
+  				if (timer){
+  					return;
+  				}
+  				let that=this;
+
+  				timer=setTimeout(()=>{
+  					let limit=$(el).children().height()-$(el).height();
+  					limit=limit<=0?0:limit;
+  					if (Math.abs(el.scrollTop-limit)<=10){
+  						
+  							vnode.context.page++
+  							
+  					}
+  					clearTimeout(timer);
+  					timer=null;
+  				},200);
+  			})
+  		}
   	}
+  },
+  methods:{
+  	
   }
 }
 </script>
@@ -79,6 +106,10 @@ export default {
 <style scoped>
 	.listWrap{
 		width: 100%;
+	}
+	.listWrap:after{
+		content: '';
+		display: table;
 	}
 	.listWrap>li{
 		position: relative;

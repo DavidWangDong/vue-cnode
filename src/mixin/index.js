@@ -8,7 +8,7 @@ const mixin={
 			target:'https://cnodejs.org/api/v1',
 			page:1,
 			complete:false,
-			loading:false,
+			loading:true,
 			pageData:[]
 		}
 	},
@@ -20,11 +20,22 @@ const mixin={
 	},
 	watch:{
 		$route (news,old) {
+			this.init();
 			this.pullData();
 		},
 		api () {
 			this.pullData();
+		},
+		page () {
+			this.loading=true;
+			setTimeout(()=>{this.pullData()},500)
+			
 		}
+	},
+	computed:{
+			loginShow () {
+				return !this.$store.state.loginFlag;
+			}
 	},
 	methods:{
 		getFromApi (url,option={},call){
@@ -46,13 +57,13 @@ const mixin={
 		init (){
 			this.page=1;
 			this.complete=false;
+			this.loading=true;
 			this.clear();
 		},
 		clear (){
 			this.pageData.splice(0,this.pageData.length);
 		},
 		pullData () {
-			this.init();
 			let param=this.createApi();
 			let that=this;
 			try {
@@ -62,11 +73,13 @@ const mixin={
 				this.getFromApi(param.url,param.option,function(data){
 					let dataList=data.data.data;
 					let type=Object.prototype.toString.call(dataList);
+					that.loading=false;
 					if (type==='[object Object]'){
 						that.pageData.push(dataList);
 						return;
 					}
 					that.pageData=that.pageData.concat(JSON.parse(JSON.stringify(dataList)));
+					
 				})
 			} catch (e){
 				

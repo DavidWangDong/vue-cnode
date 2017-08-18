@@ -1,13 +1,11 @@
 <template>
 	<div class="wrap">
-		<template v-if="HomeisShow">
+		<template v-if="!loginShow">
 			<user-home :pagedata="pageData" :username="user" :target="target"></user-home>
 		</template>
-		<template v-if="loginShow">
-			<div class="loginBtn">
-				<span><router-link :to="'/login'">您还未登录，请先登录！</router-link></span>
-			</div>
-		</template>
+		<need-login>
+			
+		</need-login>
 		<v-footer></v-footer>
 	</div>
 	
@@ -18,10 +16,11 @@
 	import mixin from '@/mixin'
 	import userHome from '@/components/userhome'
 	import loginPage from '@/components/loginpage'
+	import needLogin from '@/components/needLogin'
 	export default{
 		name:'home',
 		mixins:[mixin],
-		components:{vFooter,userHome,loginPage},
+		components:{vFooter,userHome,loginPage,needLogin},
 		data (){
 			let that=this;
 			return {
@@ -29,16 +28,25 @@
 				user:this.$store.getters.getUserName
 			}
 		},
-		computed:{
-			HomeisShow () {
-				return this.$store.state.loginFlag;
-			},
-			loginShow () {
-				return !this.$store.state.loginFlag;
-			}
-		},
 		methods:{
-			
+			createApi () {
+				let param={};
+				let url=this.target+this.api;
+				let params=JSON.parse(JSON.stringify(this.$route.query));
+				params.page=this.page;
+				if (this.$store.state.accesstoken){
+					param.isDo=true;
+					params.accesstoken=this.$store.state.accesstoken;
+				}else{
+					param.isDo=false;
+				}
+				let option={
+					params:params
+				}
+				param.url=url;
+				param.option=option;
+				return param;
+			},
 		}
 	}
 </script>

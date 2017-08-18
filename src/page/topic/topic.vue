@@ -46,7 +46,8 @@
 		</template>
 		
 	</div>
-	<div class="topicFoot" v-for="(val,index) in pageData">
+	<loading :load="loading"></loading>
+	<div class="topicFoot" v-for="(val,index) in pagedata">
 		<span class="icon iconfont icon-back sideBtn" @click.self="$router.back()"></span>
 		<span class="inputBtn" @click="to_comment(val);">说点什么吧！</span>
 		<span :class="[{sideBtn:true},{icon:true},{iconfont:true},{'icon-good':true},{'iconBig':true},{'active':isCollect(val.id)}]" @click.self="toDoCollect(val.id,val)"></span>
@@ -56,9 +57,11 @@
 
 <script type="text/javascript">
 	import mixin from '@/mixin'
+	import loading from '@/components/loading'
 	export default{
 		name:'topic',
 		mixins:[mixin],
+		components:{loading},
 		updated (){
 			let el=this.$el;
 			let aList=document.querySelectorAll('.cellBody a');
@@ -70,6 +73,14 @@
 			let that=this;
 			return {
 				api:that.$route.path,
+			}
+		},
+		computed:{
+			pagedata () {
+				if (this.pageData[0]===undefined){
+					return [{}];
+				}
+				return this.pageData;
 			}
 		},
 		methods:{
@@ -113,13 +124,18 @@
 				let msg="请输入您的评论！"
 				let hasMsg=false;
 				if (reply){
+					if (reply.author.loginname==this.$store.state.username){
+						this.$emit('showtost','亲~不能自己回复自己哦！');
+						return ;
+					}
 					msg='@'+reply.author.loginname;
 					this.$store.commit('set_curr',{key:'curr_reply_id',id:reply.id});
+					hasMsg=true;
 				}
 				this.show_model({
 					type:'comment',
 					msg:msg,
-					hasMsg:true
+					hasMsg:hasMsg
 				});
 				this.$store.commit('set_curr',{key:'curr_topic_id',id:topic.id});
 			}

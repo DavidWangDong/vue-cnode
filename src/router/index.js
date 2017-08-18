@@ -6,6 +6,7 @@ import home from '@/page/my/home'
 import messages from '@/page/my/messages'
 import user from '@/page/user/userinfo'
 import login from '@/page/login/loginpage'
+import createtopic from '@/page/createtopic/createtopic'
 import store from '@/store'
 
 Vue.use(Router)
@@ -48,6 +49,11 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: login
+    },
+    {
+      path:'/createtopic',
+      name:'createtopic',
+      component:createtopic
     }
   ]
 })

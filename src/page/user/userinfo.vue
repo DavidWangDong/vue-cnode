@@ -2,6 +2,7 @@
 	<div class="wrap">	
 		<user-home-head :title="title"></user-home-head>		
 		<user-home :pagedata="pageData" :username="user" :target="target" :type="type"></user-home>
+		<loading :load="loading"></loading>
 	</div>	
 </template>
 
@@ -9,10 +10,11 @@
 	import mixin from '@/mixin'
 	import userHome from '@/components/userhome'
 	import userHomeHead from '@/components/userhomehead'
+	import loading from '@/components/loading'
 	export default{
 		name:'home',
 		mixins:[mixin],
-		components:{userHome,userHomeHead},
+		components:{userHome,userHomeHead,loading},
 		data (){
 			let that=this;
 			return {
@@ -22,13 +24,6 @@
 				title:'个人详情页'
 			}
 		},
-		computed:{
-			HomeisShow () {
-				return this.$store.state.loginFlag;
-			},
-			loginShow () {
-				return !this.$store.state.loginFlag;
-			}
-		}
+		
 	}
 </script>

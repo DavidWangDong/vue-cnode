@@ -62,7 +62,7 @@ const store = new Vuex.Store({
 		},
 		colList (state){
 			return state.collect_list;
-		}
+		},
 	}
 })
 

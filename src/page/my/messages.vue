@@ -1,7 +1,8 @@
 <template>
 	<div class="messageWrap">
-		<template v-if="HomeisShow">
-			<user-home-head :title="title"></user-home-head>
+		<user-home-head :title="title"></user-home-head>
+		<template v-if="!loginShow">
+			
 			<div class="homeBody" :style="{top:'50px',bottom:'0'}">
 					<ul class="topic_type" @click="changeTab($event)">
 						<li :class="{'about':true,'active':activeClass=='about'}" type="about">
@@ -35,22 +36,20 @@
 					</div>
 				</div>
 		</template>	
-		<template v-if="loginShow">
-			<div class="loginBtn">
-				<span><router-link :to="'/login'">您还未登录，请先登录！</router-link></span>
-			</div>
-			<v-footer></v-footer>
-		</template>
+		<need-login>
+			
+		</need-login>
 	</div>
 </template>
 <script type="text/javascript">
 	import mixin from '@/mixin'
 	import userHomeHead from '@/components/userhomehead'
 	import vFooter from '@/components/footer'
+	import needLogin from '@/components/needLogin'
 	export default{
 		name:'home',
 		mixins:[mixin],
-		components:{userHomeHead,vFooter},
+		components:{userHomeHead,vFooter,needLogin},
 		data (){
 			let that=this;
 			return {
@@ -61,22 +60,14 @@
 			}
 		},
 		computed:{
-			HomeisShow () {
-				return this.$store.state.loginFlag;
-			},
-			loginShow () {
-				return !this.$store.state.loginFlag;
-			},
 			get_type_topic () {
 				let   type = this.activeClass;
 				if (this.pageData.length<=0){
 					return [];
 				}
 				if (type=='about'){
-					// console.log(this.pageData[0])
 					return this.pageData[0].hasnot_read_messages;
 				}else if (type=='recent'){
-					// console.log(this.pageData[0])
 					return this.pageData[0].has_read_messages;
 				}
 			}
