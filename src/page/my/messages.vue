@@ -24,9 +24,9 @@
 									<router-link :to="'/topic/'+topic.topic.id">
 										{{topic.topic.title}}
 									</router-link>
-									中{{topic.type=='at'?'回复':'点赞'}}了你
+									中{{topic.type=='at'?'回复':'评论'}}了你
 									<br/>
-									{{topic.type=='at'?'内容为':''}}
+									{{topic.type=='at'?'内容为':'内容为'}}
 									<div v-html="topic.reply.content">
 									</div>
 								</div>
@@ -92,7 +92,6 @@
 				return param;
 			},
 			changeTab (e){
-				console.log(e);
 				let el=e.target;
 				if (el.nodeName!=='LI'){
 					return;

@@ -39,7 +39,10 @@
 
 									</div>
 								</router-link>
-								
+								<!-- <div class="opration" v-if="isShowOparetion(topic.author.loginname)">
+									<span class="edit">编辑</span>
+									<span class="delete" @click="deleteMyTopic(topic.id)">删除</span>
+								</div> -->
 							</li>
 						</ul>
 					</div>
@@ -102,6 +105,12 @@
 			loginOut () {
 				this.$store.commit('unlogin');
 				this.$router.push({name:'login'});
+			},
+			isShowOparetion (name) {
+				return name===this.$store.state.username&&this.activeClass==='recent';
+			},
+			deleteMyTopic (id) {
+				
 			}
 		}
 	}
@@ -229,5 +238,12 @@
 	.topic_content{
 		    font-size: 14px;
 	}
-
+	.opration{
+			display: flex;
+    		justify-content: flex-end;
+	}
+	.opration span{
+		padding: 5px 10px;
+    	color: #80bd01;
+	}
 </style>

@@ -39,7 +39,12 @@ const mixin={
 	},
 	methods:{
 		getFromApi (url,option={},call){
-			this.$http.get(url,option).then((data)=>{call&&call(data)});
+			this.$http.get(url,option).then((data)=>{call&&call(data)},(data)=>{
+				this.$emit('showtost',data.data.error_msg);
+				setTimeout(()=>{
+					this.$router.back();
+				})
+			});
 		},
 		createApi () {
 			let param={};
