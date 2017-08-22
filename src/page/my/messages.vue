@@ -41,6 +41,7 @@
 		</need-login>
 	</div>
 </template>
+<!--  -->
 <script type="text/javascript">
 	import mixin from '@/mixin'
 	import userHomeHead from '@/components/userhomehead'
