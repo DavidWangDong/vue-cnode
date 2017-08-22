@@ -1,12 +1,16 @@
 <template>
   <div id="app" v-fullheight>
+    
     <template>
-      <router-view @showmodel="showModel"  @showtost="showTost"></router-view>
+      
+        <router-view @showmodel="showModel"  @showtost="showTost"></router-view>
+      
       <model-view :modelClass="modelClass" :modelType="modelType" :modelShow="modelShow" :modelMassage="modelMassage" @hidemodel="hideModel" :toUrl="toUrl" @showtost="showTost" @comment="comment_topic" :hasMsg="hasMsg"></model-view>
     </template>
     <tost-view v-for="(val,index) in messageList" :message="val" :key="index"></tost-view>
   </div>
-</template>
+  </template>
+
 
 <script>
 
