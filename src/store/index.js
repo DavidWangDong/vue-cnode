@@ -10,7 +10,11 @@ const store = new Vuex.Store({
 		accesstoken:'',
 		collect_list:[],
 		curr_topic_id:'',
-		curr_reply_id:''
+		curr_reply_id:'',
+		_urlHistory:[],
+		_urlTmp:{},
+		direction:'',
+		scrollTop:0
 	},
 	mutations:{
 		login (state,param){
@@ -48,6 +52,31 @@ const store = new Vuex.Store({
 		},
 		set_curr (state,param){
 			state[param.key]=param.id;
+		},
+		chgDirec (state,direction){
+			state.direction=direction;
+		},
+		set_url (state,param){
+				if (state._urlHistory.length>0){
+					let lastItem=state._urlHistory[state._urlHistory.length-1];
+					let key1=Object.keys(lastItem)[0]
+					let key2=Object.keys(param)[0]
+					if (key1==key2){
+						Object.keys(lastItem[key1]).forEach((key)=>{
+							lastItem[key1][key]=param[key1][key];
+						})
+						return;
+					}
+				}
+				state._urlHistory.push(param);
+		},
+		set_urlTmp (state,param){
+			Object.keys(param).forEach((key)=>{
+				state._urlTmp[key]=param[key];
+			})
+		},
+		set_scrollTop(state,val){
+			state.scrollTop=val;
 		}
 	},
 	getters : {

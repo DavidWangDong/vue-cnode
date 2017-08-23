@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import vueResource from 'vue-resource';
-import hasCollect from '@/filters/hasCollected'
+import hasCollect from '@/filters/hasCollected';
+import $ from 'jQuery'
 Vue.use(vueResource);
 const mixin={
 	data () {
@@ -9,33 +10,65 @@ const mixin={
 			page:1,
 			complete:false,
 			loading:true,
-			pageData:[]
+			pageData:[],
+			scrollTop:0
 		}
 	},
 	created () {
-		this.complete=true;
+		if (this.$store.state.direction=='back'){
+			let item=this.$store.state._urlTmp
+			Object.keys(item[this.$route.fullPath]).forEach((key)=>{
+				this[key]=item[this.$route.fullPath][key];
+			})
+			Object.keys(item).forEach((key)=>{
+				delete item[key];
+			})
+			this.complete=true;
+		}
+	},
+	updated () {
+		if (!this.$store.state.direction||this.$store.state.direction=='forward'){
+			let param={};
+			param[this.$route.fullPath]=JSON.parse(JSON.stringify(this.$data));
+			this.$store.commit('set_url',param);
+		}
 	},
 	mounted (){
-		this.pullData();
+		!this.complete&&this.pullData();
 	},
 	watch:{
 		$route (news,old) {
-			this.init();
-			this.pullData();
-		},
-		api () {
-			this.pullData();
+				this.init();
+				this.pullData();
 		},
 		page () {
 			this.loading=true;
 			setTimeout(()=>{this.pullData()},500)
-			
 		}
 	},
 	computed:{
 			loginShow () {
 				return !this.$store.state.loginFlag;
 			}
+	},
+	directives :{
+		scrollRecord : {
+			inserted (el,binding,vnode) {
+				el.scrollTop=vnode.context.$store.state.scrollTop;
+				// console.log($(el));
+				let timer=null;
+				$(el).on('scroll',()=>{
+					if (timer){
+						return;
+					}
+					timer=setTimeout(()=>{
+						vnode.context.$store.commit('set_scrollTop',el.scrollTop);
+						clearTimeout(timer);
+						timer=null;
+					},200)
+				})
+			}
+		}
 	},
 	methods:{
 		getFromApi (url,option={},call){

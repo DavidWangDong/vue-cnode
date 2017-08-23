@@ -6,7 +6,7 @@
 				<h4 class="title">{{val.title}}</h4>
 				<div class="topicInfo">
 					<div class="author">
-						<router-link :to="'/user/'+val.author.loginname">
+						<router-link :to="{path:'/user/'+val.author.loginname,query:{direction:'forward'}}">
 							<img :src="val.author.avatar_url">
 							<span>{{val.author.loginname}}</span>
 						</router-link>
@@ -24,7 +24,7 @@
 				<ul class="speakList">
 					<li class="speakCell" v-for="(reply,key) in val.replies">
 						<div class="cellHead">
-							<router-link :to="'/user/'+reply.author.loginname">
+							<router-link :to="{path:'/user/'+reply.author.loginname,query:{direction:'forward'}}">
 								<img :src="reply.author.avatar_url">
 								<span>{{reply.author.loginname}}</span>
 							</router-link>

@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
   	<v-nav></v-nav>
-  	<v-content v-scroll>
+  	<v-content  v-scroll:chgPage>
   		<div>
 	  		<ul class="listWrap">
 	  			<li v-for="(val,index) in pageData">
@@ -14,7 +14,7 @@
 	  				<span class=""></span>
 	  				<div class="topContent">
 	  					<div class="headInfo">
-	  						<router-link :to="'/user/'+val.author.loginname"><img :src="val.author.avatar_url" class="avatar"></router-link>
+	  						<router-link :to="{path:'/user/'+val.author.loginname,query:{direction:'forward'}}"><img :src="val.author.avatar_url" class="avatar"></router-link>
 	  					<!-- <p class="username">{{val.author.loginname}}</p> -->
 		  				</div>
 		  				<div class="topicContent">
@@ -57,7 +57,6 @@ export default {
   name: 'index',
   mixins:[mixin],
   components:{vNav,vFooter,vContent,loading},
-  
   data () {
     return {
     	api:'/topics'
@@ -73,23 +72,27 @@ export default {
   },
   directives:{
   	scroll :{
-  		bind (el,binding,vnode) {
+  		inserted (el,binding,vnode) {
+  			el.scrollTop=vnode.context.$store.state.scrollTop;
   			let timer=null;
   			$(el).on('scroll',(e)=>{
   				if (timer){
   					return;
   				}
   				let that=this;
-
   				timer=setTimeout(()=>{
-  					let limit=$(el).children().height()-$(el).height();
-  					limit=limit<=0?0:limit;
-  					if (Math.abs(el.scrollTop-limit)<=10){
-  						
-  							vnode.context.page++
-  							
+
+  					vnode.context.$store.commit('set_scrollTop',el.scrollTop);
+  					if (binding.arg&&binding.arg=='chgPage'){
+  						let limit=$(el).children().height()-$(el).height();
+	  					limit=limit<=0?0:limit;
+	  					if (Math.abs(el.scrollTop-limit)<=10){
+	  						
+	  							vnode.context.page++
+	  							
+	  					}
+	  					clearTimeout(timer);
   					}
-  					clearTimeout(timer);
   					timer=null;
   				},200);
   			})
