@@ -109,10 +109,10 @@ let mixin={
 				next();
 			});
 			this.add_after((data,next)=>{
-				console.log(this);
 				let dataList=data.data.data;
 				let type=Object.prototype.toString.call(dataList);
 				this.loading=false;
+				console.log(this.pageData)
 				if (type==='[object Object]'){
 					this.pageData.push(dataList);
 					return;

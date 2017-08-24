@@ -81,7 +81,6 @@ const proxy_ajax = function (param) {
 	}
 	const fixed_param=Object.assign(default_option,param);
 	execute_arr.bind(this)(before_send,fixed_param,'get');
-	// realAjax.bind(this)(fixed_param);
 }
 
 
