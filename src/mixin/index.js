@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import vueResource from 'vue-resource';
 import hasCollect from '@/filters/hasCollected';
+import pullData from './pullData';
 import $ from 'jQuery'
 Vue.use(vueResource);
-const mixin={
+let mixin={
+	mixins:[pullData],
 	data () {
 		return {
 			target:'https://cnodejs.org/api/v1',
@@ -71,25 +73,22 @@ const mixin={
 		}
 	},
 	methods:{
-		getFromApi (url,option={},call){
-			this.$http.get(url,option).then((data)=>{call&&call(data)},(data)=>{
-				this.$emit('showtost',data.data.error_msg);
-				setTimeout(()=>{
-					this.$router.back();
-				})
-			});
-		},
+		// getFromApi (url,option={},call){
+		// 	this.$http.get(url,option).then((data)=>{call&&call(data)},(data)=>{
+		// 		this.$emit('showtost',data.data.error_msg);
+		// 		setTimeout(()=>{
+		// 			this.$router.back();
+		// 		})
+		// 	});
+		// },
 		createApi () {
 			let param={};
 			let url=this.target+this.api;
 			var that = this;
 			let params=JSON.parse(JSON.stringify(this.$route.query));
 			params.page=this.page;
-			let option={
-				params:params
-			}
+			param.body=params
 			param.url=url;
-			param.option=option;
 			return param;
 		},
 		init (){
@@ -103,26 +102,24 @@ const mixin={
 		},
 		pullData () {
 			let param=this.createApi();
-			let that=this;
-			try {
-				if (param.isDo===false){
+			this.add_before((param,next)=>{
+				if (this.$route.meta.needLogin){
 					return;
 				}
-				this.getFromApi(param.url,param.option,function(data){
-					let dataList=data.data.data;
-					let type=Object.prototype.toString.call(dataList);
-					that.loading=false;
-					if (type==='[object Object]'){
-						that.pageData.push(dataList);
-						return;
-					}
-					that.pageData=that.pageData.concat(JSON.parse(JSON.stringify(dataList)));
-					
-				})
-			} catch (e){
-				
-			}
-			
+				next();
+			});
+			this.add_after((data,next)=>{
+				console.log(this);
+				let dataList=data.data.data;
+				let type=Object.prototype.toString.call(dataList);
+				this.loading=false;
+				if (type==='[object Object]'){
+					this.pageData.push(dataList);
+					return;
+				}
+				this.pageData=this.pageData.concat(JSON.parse(JSON.stringify(dataList)));
+			});
+			this.doAjax(param);
 		},
 		toDoCollect (id,val) {
 	  		let that=this
@@ -183,5 +180,5 @@ const mixin={
   		}
 	}
 }
-
+console.log(mixin);
 export default mixin;

@@ -53,6 +53,9 @@ const router = new Router({
     {
       path:'/createtopic',
       name:'createtopic',
+      meta:{
+        needLogin:true
+      },
       component:createtopic
     }
   ]
