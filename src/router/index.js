@@ -63,11 +63,10 @@ const router = new Router({
 
 router.beforeEach(function (to,from,next) {
     let item=store.state._urlHistory;
-    if (item.length>=2){
-      let key=Object.keys(item[item.length-2])[0];
+    if (item.length>=1){
+      let key=Object.keys(item[item.length-1])[0];
       if (to.fullPath==key){
-        item.pop();
-        store.commit('set_urlTmp',item[item.length-1]);
+        let last=item[item.length-1];
         store.commit('chgDirec','back');
       }else{
         store.commit('chgDirec','forward');
@@ -75,7 +74,6 @@ router.beforeEach(function (to,from,next) {
     }else{
         store.commit('chgDirec','forward');
     }
-  
     next();
 });
 

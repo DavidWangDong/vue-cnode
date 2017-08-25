@@ -57,12 +57,22 @@ export default {
         },800)
     },
     comment_topic (message) {
-      this.$http.post(this.url+/topic/+this.$store.state.curr_topic_id+'/replies',{accesstoken:this.$store.state.accesstoken,content:message,reply_id:this.$store.state.curr_reply_id}).then((data)=>{
+      this.clear_cache('all');
+      this.add_before((param,next)=>{
+          param.url=this.url+/topic/+this.$store.state.curr_topic_id+'/replies';
+          param.method='POST';
+          param.body={accesstoken:this.$store.state.accesstoken,content:message,reply_id:this.$store.state.curr_reply_id};
+          next();
+      });
+      this.add_after((data,next)=>{
+        if (data.ok){
           this.$router.replace({path:this.$route.path,query:{type:'reload',key:Math.ceil(Math.random()*100)}});
           this.hideModel();
-      },(data)=>{
+          return;
+        }
         this.showTost(data.data.error_msg);
-      })
+      });
+      this.doAjax();
     }
   },
 }

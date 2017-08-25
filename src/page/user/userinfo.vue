@@ -1,7 +1,7 @@
 <template>
 	<div class="wrap">	
 		<user-home-head :title="title"></user-home-head>		
-		<user-home :pagedata="pageData" :username="user" :target="target" :type="type"></user-home>
+		<user-home :pagedata="pageData" :username="user" :target="target" :type="type" :scrollTop="scrollTop" :active="active" @chgtabs="chgTab"></user-home>
 		<loading :load="loading"></loading>
 	</div>	
 </template>
@@ -21,7 +21,10 @@
 				api:that.$route.fullPath,
 				user:that.$route.params.name,
 				type:'info',
-				title:'个人详情页'
+				title:'个人详情页',
+				scrollTop:0,
+				active:'about',
+				store_data:['active'],
 			}
 		},
 		

@@ -1,6 +1,6 @@
 <template>
  <div class="wrap">
-	<div class="topicWrap">
+	<div class="topicWrap" v-scroll>
 		<template  v-for="(val,index) in pageData">
 			<div class="topicHead">
 				<h4 class="title">{{val.title}}</h4>
@@ -46,7 +46,7 @@
 		</template>
 		
 	</div>
-	<loading :load="loading"></loading>
+	<loading-view :load="loading"></loading-view>
 	<div class="topicFoot" v-for="(val,index) in pagedata">
 		<span class="icon iconfont icon-back sideBtn" @click.self="$router.back()"></span>
 		<span class="inputBtn" @click="to_comment(val);">说点什么吧！</span>
@@ -57,11 +57,11 @@
 
 <script type="text/javascript">
 	import mixin from '@/mixin'
-	import loading from '@/components/loading'
+	import loadingView from '@/components/loading'
 	export default{
 		name:'topic',
 		mixins:[mixin],
-		components:{loading},
+		components:{loadingView},
 		updated (){
 			let el=this.$el;
 			let aList=document.querySelectorAll('.cellBody a');
@@ -96,26 +96,32 @@
 				return res;
 			},
 			to_up_down (reply_id,up_arr){
-				let that=this;
 				if (this.redirect_to_login()===false){
 					return false;
 				}
-				
-				this.$http.post(this.target+'/reply/'+reply_id+'/ups',{accesstoken:this.$store.state.accesstoken}).then(function(data){
-					
-							if(data.data.action=='up'){
-			  					
-			  					that.$emit('showtost','点赞成功！')
-			  					up_arr.push(that.$store.state.userid);
-							}else if(data.data.action){
-							
-								that.$emit('showtost','取消点赞！')
-			  					up_arr.splice(up_arr.indexOf(that.$store.state.userid),1);
-							}
-						
-				},function(data){
-					that.$emit('showtost',data.data.error_msg);
-				})
+
+				this.clear_cache('all');
+				this.add_before((param,next)=>{
+					param.url=this.target+'/reply/'+reply_id+'/ups';
+					param.body={accesstoken:this.$store.state.accesstoken};
+					param.method='POST';
+					next();
+				});
+				this.add_after((data,next)=>{
+					if (!data.ok){
+						this.$emit('showtost',data.data.error_msg);
+						return;
+					}
+					let msg='取消点赞'
+					if (data.data.action=='up'){
+						msg='点赞成功！';
+						up_arr.push(this.$store.state.userid);
+					}else{
+						up_arr.splice(up_arr.indexOf(this.$store.state.userid),1);
+					}
+					this.$emit('showtost',msg);
+				});
+				this.doAjax();
 			},
 			to_comment (topic,reply) {
 				if (this.redirect_to_login()===false){

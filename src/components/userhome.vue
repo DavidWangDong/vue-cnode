@@ -55,16 +55,20 @@
 	
 	export default {
 		name:'userhome',
-		props:['pagedata','username','target','type'],
+		props:['pagedata','username','target','type','active'],
 		data (){
 			return {
 				activeClass:'about',
 				collect:[],
-				collect_load:false
+				collect_load:false,
 			}
+		},
+		mounted () {
+			this.activeClass=this.active;
 		},
 		watch:{
 			activeClass (news,old) {
+				this.$emit('chgtabs',news);
 				if (news!=='collect'){
 					return;
 				}

@@ -1,7 +1,7 @@
 <template>
 	<div class="wrap">
 		<template v-if="!loginShow">
-			<user-home :pagedata="pageData" :username="user" :target="target"></user-home>
+			<user-home :pagedata="pageData" :username="user" :target="target" :active="active" @chgtabs="chgTab"></user-home>
 		</template>
 		<need-login>
 			
@@ -25,7 +25,9 @@
 			let that=this;
 			return {
 				api:this.$store.getters.getUserUrl,
-				user:this.$store.getters.getUserName
+				user:this.$store.getters.getUserName,
+				active:'about',
+				store_data:['active']
 			}
 		},
 		methods:{

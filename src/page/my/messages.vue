@@ -74,24 +74,6 @@
 			}
 		},
 		methods:{
-			createApi () {
-				let param={};
-				let url=this.target+this.api;
-				let params=JSON.parse(JSON.stringify(this.$route.query));
-				params.page=this.page;
-				if (this.$store.state.accesstoken){
-					param.isDo=true;
-					params.accesstoken=this.$store.state.accesstoken;
-				}else{
-					param.isDo=false;
-				}
-				let option={
-					params:params
-				}
-				param.url=url;
-				param.option=option;
-				return param;
-			},
 			changeTab (e){
 				let el=e.target;
 				if (el.nodeName!=='LI'){

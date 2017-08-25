@@ -2,10 +2,11 @@ import Vue from 'vue';
 import vueResource from 'vue-resource';
 import hasCollect from '@/filters/hasCollected';
 import pullData from './pullData';
+import route_data from '@/route_data';
 import $ from 'jQuery'
 Vue.use(vueResource);
 let mixin={
-	mixins:[pullData],
+	mixins:[pullData,route_data],
 	data () {
 		return {
 			target:'https://cnodejs.org/api/v1',
@@ -13,27 +14,21 @@ let mixin={
 			complete:false,
 			loading:true,
 			pageData:[],
-			scrollTop:0
+			scrollTop:0,
+			curr_url:'',
+			store_data:[],
 		}
 	},
 	created () {
+		this.curr_url=this.$route.fullPath;
 		if (this.$store.state.direction=='back'){
-			let item=this.$store.state._urlTmp
-			Object.keys(item[this.$route.fullPath]).forEach((key)=>{
-				this[key]=item[this.$route.fullPath][key];
-			})
-			Object.keys(item).forEach((key)=>{
-				delete item[key];
-			})
-			this.complete=true;
+			this.history_get_data();
+			this.pageData.length>0&&(this.complete=true);
+			this.loading=false;
 		}
 	},
-	updated () {
-		if (!this.$store.state.direction||this.$store.state.direction=='forward'){
-			let param={};
-			param[this.$route.fullPath]=JSON.parse(JSON.stringify(this.$data));
-			this.$store.commit('set_url',param);
-		}
+	beforeDestroy () {
+		this.$store.state.direction=='forward'&&this.add_history_url(Object.assign([],this.store_data));
 	},
 	mounted (){
 		!this.complete&&this.pullData();
@@ -53,44 +48,7 @@ let mixin={
 				return !this.$store.state.loginFlag;
 			}
 	},
-	directives :{
-		scrollRecord : {
-			inserted (el,binding,vnode) {
-				el.scrollTop=vnode.context.$store.state.scrollTop;
-				// console.log($(el));
-				let timer=null;
-				$(el).on('scroll',()=>{
-					if (timer){
-						return;
-					}
-					timer=setTimeout(()=>{
-						vnode.context.$store.commit('set_scrollTop',el.scrollTop);
-						clearTimeout(timer);
-						timer=null;
-					},200)
-				})
-			}
-		}
-	},
 	methods:{
-		// getFromApi (url,option={},call){
-		// 	this.$http.get(url,option).then((data)=>{call&&call(data)},(data)=>{
-		// 		this.$emit('showtost',data.data.error_msg);
-		// 		setTimeout(()=>{
-		// 			this.$router.back();
-		// 		})
-		// 	});
-		// },
-		createApi () {
-			let param={};
-			let url=this.target+this.api;
-			var that = this;
-			let params=JSON.parse(JSON.stringify(this.$route.query));
-			params.page=this.page;
-			param.body=params
-			param.url=url;
-			return param;
-		},
 		init (){
 			this.page=1;
 			this.complete=false;
@@ -101,51 +59,69 @@ let mixin={
 			this.pageData.splice(0,this.pageData.length);
 		},
 		pullData () {
-			let param=this.createApi();
+			this.clear_cache();
 			this.add_before((param,next)=>{
-				if (this.$route.meta.needLogin){
+				const needLogin=this.$route.meta.needLogin
+				const accesstoken=this.$store.state.accesstoken
+
+				if (needLogin&&!accesstoken){
 					return;
+				}
+				if (needLogin){
+					param.body['accesstoken']=accesstoken;
 				}
 				next();
 			});
+			this.add_before((param,next)=>{
+				let params=JSON.parse(JSON.stringify(this.$route.query));
+					params.page=this.page;
+					param.body=Object.assign(param.body,params);
+					param.url=this.target+this.api;
+					next()
+			})
+			
 			this.add_after((data,next)=>{
+				if (!data.ok){
+					this.$emit('showtost',data.data.error_msg);
+					this.$router.back();
+					return;
+				}
 				let dataList=data.data.data;
 				let type=Object.prototype.toString.call(dataList);
 				this.loading=false;
-				console.log(this.pageData)
 				if (type==='[object Object]'){
 					this.pageData.push(dataList);
 					return;
 				}
 				this.pageData=this.pageData.concat(JSON.parse(JSON.stringify(dataList)));
 			});
-			this.doAjax(param);
+			this.doAjax();
 		},
 		toDoCollect (id,val) {
 	  		let that=this
 	  		if (this.redirect_to_login()===false) {
 	  			return false;
 	  		}
-	  		if (hasCollect(id)){
-	  			
-	  			this.$http.post(this.target+'/topic_collect/de_collect',{accesstoken:this.$store.state.accesstoken,topic_id:id}).then(function(data){
-		  			let msg='取消收藏！'
-		  			if (!(data.ok&&data.success)){
-			  			that.$emit('showtost',msg);
-		  				that.$store.commit('del_collect',id);
-		  			}
-	  			})
-	  			return;
-	  		}
-	  		this.$http.post(this.target+'/topic_collect/collect',{accesstoken:this.$store.state.accesstoken,topic_id:id}).then(function(data){
-	  			let msg='收藏成功！'
-	  			if (!(data.ok&&data.data.success)){
-	  				msg="收藏失败！"
-	  			}else{
-	  				that.$store.commit('add_collect',val);
+	  		const collectflag=hasCollect(id);
+	  		const msg=collectflag?'取消收藏！':'收藏成功！';
+	  		const action=collectflag?'de_collect':'collect';
+	  		this.clear_cache();
+	  		this.add_before((param,next)=>{
+	  			param.url=this.target+'/topic_collect/'+action;
+	  			param.method="POST";
+	  			param.body={accesstoken:this.$store.state.accesstoken,topic_id:id};
+	  			next();
+	  		});
+	  		this.add_after((data,next)=>{
+	  			if (data.ok==false){
+	  				this.$emit('showtost',data.data.error_msg);
+	  				return;
 	  			}
-	  			that.$emit('showtost',msg);
+	  			!collectflag&&this.$store.commit('add_collect',val);
+	  			collectflag&&this.$store.commit('del_collect',id);
+	  			this.$emit('showtost',msg);
 	  		})
+	  		this.doAjax()
   		},
   		isCollect (id) {
 	  		let arr=this.$store.getters.colList;
@@ -177,8 +153,10 @@ let mixin={
 		        toUrl:param.url,
 		        hasMsg:param.hasMsg?param.hasMsg:false,
 	  		})
-  		}
+  		},
+  		chgTab (val) {
+				this.active=val;
+			}
 	}
 }
-console.log(mixin);
 export default mixin;

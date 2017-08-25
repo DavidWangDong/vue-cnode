@@ -70,35 +70,35 @@ export default {
   				   tab=='ask'?'问答':'测试';
   	}
   },
-  directives:{
-  	scroll :{
-  		inserted (el,binding,vnode) {
-  			el.scrollTop=vnode.context.$store.state.scrollTop;
-  			let timer=null;
-  			$(el).on('scroll',(e)=>{
-  				if (timer){
-  					return;
-  				}
-  				let that=this;
-  				timer=setTimeout(()=>{
+  // directives:{
+  // 	scroll :{
+  // 		inserted (el,binding,vnode) {
+  // 			el.scrollTop=vnode.context.$store.state.scrollTop;
+  // 			let timer=null;
+  // 			$(el).on('scroll',(e)=>{
+  // 				if (timer){
+  // 					return;
+  // 				}
+  // 				let that=this;
+  // 				timer=setTimeout(()=>{
 
-  					vnode.context.$store.commit('set_scrollTop',el.scrollTop);
-  					if (binding.arg&&binding.arg=='chgPage'){
-  						let limit=$(el).children().height()-$(el).height();
-	  					limit=limit<=0?0:limit;
-	  					if (Math.abs(el.scrollTop-limit)<=10){
+  // 					vnode.context.$store.commit('set_scrollTop',el.scrollTop);
+  // 					if (binding.arg&&binding.arg=='chgPage'){
+  // 						let limit=$(el).children().height()-$(el).height();
+	 //  					limit=limit<=0?0:limit;
+	 //  					if (Math.abs(el.scrollTop-limit)<=10){
 	  						
-	  							vnode.context.page++
+	 //  							vnode.context.page++
 	  							
-	  					}
-	  					clearTimeout(timer);
-  					}
-  					timer=null;
-  				},200);
-  			})
-  		}
-  	}
-  },
+	 //  					}
+	 //  					clearTimeout(timer);
+  // 					}
+  // 					timer=null;
+  // 				},200);
+  // 			})
+  // 		}
+  // 	}
+  // },
   methods:{
   	
   }

@@ -54,21 +54,21 @@ const realAjax = function (data) {
 	const resutl_fn= function (res) {execute_arr(after_get,res,'res')};
 	switch (method_str){
 		case 'get':
-			this.$http.get(data.url,{body:data.body}).then((res)=>{
+			this.$http.get(data.url,{params:data.body}).then((res)=>{
 				resutl_fn(res);
-			},()=>{
+			},(res)=>{
 				resutl_fn(res);
 			}); break;
 		case 'post':
 			this.$http.post(data.url,data.body).then((res)=>{
 				resutl_fn(res);
-			},()=>{
+			},(res)=>{
 				resutl_fn(res);
 			}); break;
 		case 'jsonp':
-			this.$http.jsop(data.url,{param:data.body}).then((res)=>{
+			this.$http.jsop(data.url,{params:data.body}).then((res)=>{
 				resutl_fn(res);
-			},()=>{
+			},(res)=>{
 				resutl_fn(res);
 			}); break;
 	}
@@ -83,15 +83,25 @@ const proxy_ajax = function (param) {
 	execute_arr.bind(this)(before_send,fixed_param,'get');
 }
 
+const clear_cache=function (type) {
+	type=type?type:'all';
+	switch (type){
+		case 'all':	before_send.length=0;
+					after_get.length=0;
+					break;
+		case 'before' : before_send.length=0;break;
+		case 'after' : after_get.length=0;break;
+	}
+}
 
 export default {
 	methods:{
 		doAjax (param) {
-			console.log(this);
 			const params=param?param:{};
 			proxy_ajax.call(this,params)
 		},
 		add_before:add_before,
 		add_after:add_after,
+		clear_cache:clear_cache,
 	}
 }

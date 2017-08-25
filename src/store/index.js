@@ -70,6 +70,10 @@ const store = new Vuex.Store({
 				}
 				state._urlHistory.push(param);
 		},
+		del_last_url (state,_url){
+			const lastItem = state._urlHistory.pop();
+			Object.keys(lastItem)[0]!==_url&&state._urlHistory.push(lastItem);
+		},
 		set_urlTmp (state,param){
 			Object.keys(param).forEach((key)=>{
 				state._urlTmp[key]=param[key];
