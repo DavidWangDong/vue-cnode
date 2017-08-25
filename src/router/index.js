@@ -62,6 +62,7 @@ const router = new Router({
 })
 
 router.beforeEach(function (to,from,next) {
+    
     let item=store.state._urlHistory;
     if (item.length>=1){
       let key=Object.keys(item[item.length-1])[0];

@@ -16,10 +16,12 @@
 
 import modelView from '@/components/modelView'
 import tostView from '@/components/tostView'
+import mixin from '@/mixin/pullData'
 
 
 export default {
   name: 'app',
+  mixins:[mixin],
   components:{modelView,tostView},
   data () {
      return {
@@ -66,7 +68,11 @@ export default {
       });
       this.add_after((data,next)=>{
         if (data.ok){
-          this.$router.replace({path:this.$route.path,query:{type:'reload',key:Math.ceil(Math.random()*100)}});
+          // this.$http.get(this.url+/topic/+this.$store.state.curr_topic_id).then((data)=>{
+          //   // this.pageData.pop();
+          //   // this.pageData.push(data.data.data);
+          //   console.log(this);
+          // })
           this.hideModel();
           return;
         }
