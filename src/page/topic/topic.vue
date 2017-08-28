@@ -6,7 +6,7 @@
 				<h4 class="title">{{val.title}}</h4>
 				<div class="topicInfo">
 					<div class="author">
-						<router-link :to="{path:'/user/'+val.author.loginname,query:{direction:'forward'}}">
+						<router-link :to="{path:'/user/'+val.author.loginname}">
 							<img :src="val.author.avatar_url">
 							<span>{{val.author.loginname}}</span>
 						</router-link>
@@ -24,7 +24,7 @@
 				<ul class="speakList">
 					<li class="speakCell" v-for="(reply,key) in val.replies">
 						<div class="cellHead">
-							<router-link :to="{path:'/user/'+reply.author.loginname,query:{direction:'forward'}}">
+							<router-link :to="{path:'/user/'+reply.author.loginname}">
 								<img :src="reply.author.avatar_url">
 								<span>{{reply.author.loginname}}</span>
 							</router-link>
@@ -44,7 +44,18 @@
 				</ul>
 			</div>
 		</template>
-		
+		<div class="hoverbg" v-if="showComment" @click.self="close_hoverbg">
+			<div class="comment">
+				<div class="commentWrap">
+					<textarea class="commentInfo" :placeholder="modelMassage" v-model="comment">
+						
+					</textarea>
+				</div>
+				<div class="subBtn" @click="to_sub">
+					<span class="iconfont icon-edit" ></span>发表
+				</div>
+			</div>
+		</div>
 	</div>
 	<loading-view :load="loading"></loading-view>
 	<div class="topicFoot" v-for="(val,index) in pagedata">
@@ -62,17 +73,14 @@
 		name:'topic',
 		mixins:[mixin],
 		components:{loadingView},
-		updated (){
-			let el=this.$el;
-			let aList=document.querySelectorAll('.cellBody a');
-			for (let i=0,len=aList.length;i<len;i++){
-				aList[i].href='#'+aList[i].pathname;
-			}
-		},
 		data (){
 			let that=this;
 			return {
 				api:that.$route.path,
+				comment:'',
+				modelMassage:'请输入评论内容！',
+				showComment:false,
+				reply_id:'',
 			}
 		},
 		computed:{
@@ -127,26 +135,50 @@
 				if (this.redirect_to_login()===false){
 					return false;
 				}
-				let msg="请输入您的评论！"
-				let hasMsg=false;
 				if (reply){
 					if (reply.author.loginname==this.$store.state.username){
 						this.$emit('showtost','亲~不能自己回复自己哦！');
 						return ;
 					}
-					msg='@'+reply.author.loginname;
-					this.$store.commit('set_curr',{key:'curr_reply_id',id:reply.id});
-					hasMsg=true;
+					this.reply_id=reply.id;
+					this.modelMassage="@"+reply.author.loginname;
 				}
-				this.show_model({
-					type:'comment',
-					msg:msg,
-					hasMsg:hasMsg
-				});
-				this.$store.commit('set_curr',{key:'curr_topic_id',id:topic.id});
+				this.showComment=true;
+			},
+			close_hoverbg () {
+				this.showComment=false;
+			},
+			to_sub () {
+				if (!this.comment){
+					this.$emit('showtost','回复内容不能为空哦~');
+					return;
+				}
+				  const content=this.reply_id?(this.modelMassage+this.comment):this.comment;
+				  this.clear_cache('all');
+			      this.add_before((param,next)=>{
+			          param.url=this.target+/topic/+this.pageData[0].id+'/replies';
+			          param.method='POST';
+			          param.body={accesstoken:this.$store.state.accesstoken,content:content,reply_id:this.reply_id};
+			          next();
+			      });
+			      this.add_after((data,next)=>{
+			      	this.reply_id='';
+			      	this.modelMassage='请输入评论内容！';
+			      	this.comment='';
+			        if (data.ok){
+			            this.$http.get(this.target+/topic/+this.pageData[0].id).then((data)=>{
+			            this.pageData.length=0;
+			            this.pageData.push(data.data.data);
+			            this.$emit('showtost','评论成功！');
+			         	this.showComment=false;
+			          })
+			          return;
+			        }
+			        this.showTost(data.data.error_msg);
+			      });
+			      this.doAjax();
 			}
 		},
-
 	}
 </script>
 
@@ -288,5 +320,47 @@
 		    align-self: center;
 		    font-size: 32px;
 		    line-height: 49px;
+	}
+
+	.comment{
+		    width: 70%;
+    		margin: 0 auto;
+    		box-shadow: 0 0 5px #80bd01;
+	}
+	.commentWrap{
+		    min-height: 170px;
+		    background: #fff;
+		    padding: 5px;
+		    box-sizing: border-box;
+	}
+	.commentInfo{
+		    display: block;
+		    height: 160px;
+		    width: 100%;
+		    background: #eff2f7;
+		    outline: none;
+		    resize: none;
+		    border: none;
+		    font-size: 15px;
+	}
+	.subBtn{
+		height: 30px;
+	    background: #80bd01;
+	    color: #fff;
+	    text-align: center;
+	    line-height: 30px;
+	    font-size: 16px;
+	}
+	.hoverbg{
+		position: fixed;
+		top:0;
+		bottom: 0;
+		left:0;
+		right: 0;
+		z-index: 200;
+		background: rgba(0,0,0,0.5); 
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
 </style>

@@ -16,7 +16,7 @@ export default {
     		{name:'精华',link:'/?tab=good'},
     		{name:'分享',link:'/?tab=share'},
     		{name:'问答',link:'/?tab=ask'},
-    		{name:'招聘',link:'/?task=job'},
+    		{name:'招聘',link:'/?tab=job'},
         {name:'测试',link:'/?tab=dev'},
     	]
     }

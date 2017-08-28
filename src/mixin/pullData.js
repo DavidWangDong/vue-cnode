@@ -14,6 +14,7 @@ const after_get=[];
 const execute_arr =function (arr,param,type) {
 	const tmp_arr=[];
 	const len=arr.length;
+	type=='get'&&(param=Object.assign({},param));
 	let arr_next=null;
 	if (len==1){
 		arr_next=(type==='res'?(()=>{}).bind(null,param):realAjax.bind(this,param));
@@ -55,6 +56,7 @@ const realAjax = function (data) {
 	switch (method_str){
 		case 'get':
 			this.$http.get(data.url,{params:data.body}).then((res)=>{
+
 				resutl_fn(res);
 			},(res)=>{
 				resutl_fn(res);
@@ -79,7 +81,8 @@ const proxy_ajax = function (param) {
 		throw 'Need a Object';
 		return;
 	}
-	const fixed_param=Object.assign(default_option,param);
+	let fixed_param={};
+	fixed_param=Object.assign(default_option,param);
 	execute_arr.bind(this)(before_send,fixed_param,'get');
 }
 

@@ -1,7 +1,7 @@
 <template>
 	<div class="wrap">
 		<template v-if="!loginShow">
-			<user-home :pagedata="pageData" :username="user" :target="target" :active="active" @chgtabs="chgTab"></user-home>
+			<user-home :pagedata="pageData" :username="user" :target="target" :active="active" @chgtabs="chgTab" :scrollTop="scrollTop"></user-home>
 		</template>
 		<need-login>
 			
@@ -27,7 +27,8 @@
 				api:this.$store.getters.getUserUrl,
 				user:this.$store.getters.getUserName,
 				active:'about',
-				store_data:['active']
+				store_data:['active'],
+				scrollTop:0
 			}
 		},
 		methods:{

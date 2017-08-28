@@ -35,6 +35,7 @@ let mixin={
 	},
 	watch:{
 		$route (news,old) {
+				this.curr_url=this.$route.fullPath;
 				this.init();
 				this.pullData();
 		},
@@ -73,9 +74,10 @@ let mixin={
 				next();
 			});
 			this.add_before((param,next)=>{
-				let params=JSON.parse(JSON.stringify(this.$route.query));
+					const needLogin=this.$route.meta.needLogin
+					let params=JSON.parse(JSON.stringify(this.$route.query));
 					params.page=this.page;
-					param.body=Object.assign(param.body,params);
+					param.body=needLogin?Object.assign(param.body,params):Object.assign({},params);
 					param.url=this.target+this.api;
 					next()
 			})

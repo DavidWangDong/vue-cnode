@@ -12,7 +12,7 @@
 							已读消息
 						</li>
 					</ul>
-					<div class="contentWrap">
+					<div class="contentWrap" v-scroll>
 						<ul class="list">
 							<li class="listCell" v-for="(topic,key) in get_type_topic">
 
@@ -57,7 +57,9 @@
 				activeClass:'about',
 				api:'/messages',
 				title:'个人消息页',
-				type:'info'
+				type:'info',
+				scrollTop:0,
+				store_data:['activeClass']
 			}
 		},
 		computed:{

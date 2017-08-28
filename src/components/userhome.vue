@@ -23,7 +23,7 @@
 							收藏的话题
 						</li>
 					</ul>
-					<div class="contentWrap">
+					<div class="contentWrap" v-scroll>
 						<ul class="list">
 							<li class="listCell" v-for="(topic,key) in get_type_topic">
 								<router-link :to="'/topic/'+topic.id">
@@ -61,7 +61,11 @@
 				activeClass:'about',
 				collect:[],
 				collect_load:false,
+				scrollTop:0
 			}
+		},
+		created (){
+			this.scrollTop=this.$parent.scrollTop;
 		},
 		mounted () {
 			this.activeClass=this.active;
@@ -80,6 +84,9 @@
 				this.$http.get(this.target+'/topic_collect/'+this.username,{}).then(function (data) {
 						that.collect=data.data.data;
 				})
+			},
+			scrollTop (news,old) {
+				this.$parent.scrollTop=news;
 			}
 		},
 		computed:{

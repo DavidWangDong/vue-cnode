@@ -5,7 +5,7 @@
       
         <router-view @showmodel="showModel"  @showtost="showTost"></router-view>
       
-      <model-view :modelClass="modelClass" :modelType="modelType" :modelShow="modelShow" :modelMassage="modelMassage" @hidemodel="hideModel" :toUrl="toUrl" @showtost="showTost" @comment="comment_topic" :hasMsg="hasMsg"></model-view>
+      <model-view :modelClass="modelClass" :modelType="modelType" :modelShow="modelShow" @hidemodel="hideModel" :toUrl="toUrl" @showtost="showTost" :modelMessage="modelMassage"></model-view>
     </template>
     <tost-view v-for="(val,index) in messageList" :message="val" :key="index"></tost-view>
   </div>
@@ -30,9 +30,8 @@ export default {
         modelShow:false,
         modelMassage:'',
         toUrl:'',
-        messageList:[],
         url:'https://cnodejs.org/api/v1',
-        hasMsg:false
+        messageList:[],
      }
   },
   directives:{
@@ -57,28 +56,6 @@ export default {
           let del_index=this.messageList.indexOf(message);
           this.messageList.splice(del_index,1);
         },800)
-    },
-    comment_topic (message) {
-      this.clear_cache('all');
-      this.add_before((param,next)=>{
-          param.url=this.url+/topic/+this.$store.state.curr_topic_id+'/replies';
-          param.method='POST';
-          param.body={accesstoken:this.$store.state.accesstoken,content:message,reply_id:this.$store.state.curr_reply_id};
-          next();
-      });
-      this.add_after((data,next)=>{
-        if (data.ok){
-          // this.$http.get(this.url+/topic/+this.$store.state.curr_topic_id).then((data)=>{
-          //   // this.pageData.pop();
-          //   // this.pageData.push(data.data.data);
-          //   console.log(this);
-          // })
-          this.hideModel();
-          return;
-        }
-        this.showTost(data.data.error_msg);
-      });
-      this.doAjax();
     }
   },
 }

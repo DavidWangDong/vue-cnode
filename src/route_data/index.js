@@ -12,7 +12,6 @@ const history_get_data =function () {
 
 // 添加到历史记录
 const add_history_url = function (store_data) {
-
 	if (Object.prototype.toString.call(store_data)!=='[object Array]'){
 		throw 'Need a Array';
 		return;
@@ -34,7 +33,6 @@ const add_history_url = function (store_data) {
 // 从历史记录中删除
 const del_history_url = function (_url) {
 	store.commit('del_last_url',_url);
-
 }
 
 export default {

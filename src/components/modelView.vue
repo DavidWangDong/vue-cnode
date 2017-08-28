@@ -4,7 +4,7 @@
 		<div class="confirm" v-if="modelType=='confirm'">
 			<div class="massageWrap">
 				<span>
-					{{modelMassage}}
+					{{modelMessage}}
 				</span>
 			</div>
 			<ul class="btnWrap">
@@ -13,24 +13,13 @@
 			</ul>
 		</div>
 
-		<div class="comment" v-if="modelType=='comment'">
-			<div class="commentWrap">
-				<textarea class="commentInfo" :placeholder="modelMassage" v-model="comment">
-					
-				</textarea>
-			</div>
-			<div class="subBtn" @click="to_sub">
-				<span class="iconfont icon-edit" ></span>发表
-			</div>
-		</div>
-
 	</div>
 </template>	
 <script type="text/javascript">
 	
 	export default{
 		name:'modelView',
-		props:['modelClass','modelType','modelShow','modelMassage','toUrl','hasMsg'],
+		props:['modelClass','modelType','modelShow','modelMessage','toUrl','hasMsg'],
 		data () {
 			return {
 				comment:''
@@ -49,18 +38,7 @@
 			},
 			cancel () {
 				this.hideModel();
-			},
-			to_sub () {
-		      if (this.comment==''){
-		      	this.$emit('showtost','评论不能为空！');
-		      	return ;
-		      }
-		      if (this.hasMsg){
-		      	this.comment=this.modelMassage+this.comment;
-		      }
-		      this.$emit('comment',this.comment);
-		      this.comment='';
-		    }
+			}
 		}
 	}
 </script>
