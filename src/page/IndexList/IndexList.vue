@@ -51,7 +51,7 @@ import vNav from '@/components/nav'
 import vFooter from '@/components/footer'
 import vContent from '@/components/content'
 import mixin from '@/mixin'
-import $ from 'jQuery'
+// import $ from 'jQuery'
 import avatar from '@/assets/default_avatar.gif'
 import loading from '@/components/loading'
 

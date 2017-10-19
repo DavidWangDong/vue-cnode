@@ -3,7 +3,7 @@ import vueResource from 'vue-resource';
 import hasCollect from '@/filters/hasCollected';
 import pullData from './pullData';
 import route_data from '@/route_data';
-import $ from 'jQuery'
+// import $ from 'jQuery'
 import avatar from '@/assets/default_avatar.gif'
 Vue.use(vueResource);
 let mixin={

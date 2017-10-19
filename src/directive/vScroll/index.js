@@ -1,4 +1,4 @@
-import $ from 'jQuery'
+// import $ from 'jQuery'
 export default{
 			 
 			inserted (el,binding,vnode) {

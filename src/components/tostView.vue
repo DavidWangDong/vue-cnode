@@ -7,7 +7,7 @@
 </template>
 
 <script type="text/javascript">
-    import $ from 'jQuery';
+    // import $ from 'jQuery';
 	export default {
 		name:'tostView',
 		props:['message'],
