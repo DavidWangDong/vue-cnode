@@ -56,7 +56,7 @@
 	}
 	import userHomeHead from '@/components/userhomehead'
 	import needLogin from '@/components/needLogin'
-	import $ from 'jQuery'
+	// import $ from 'jQuery'
 	import {markdown} from 'markdown'
 	
 	export default {
