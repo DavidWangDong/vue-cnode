@@ -14,7 +14,7 @@
 	  				<span class=""></span>
 	  				<div class="topContent">
 	  					<div class="headInfo">
-	  						<router-link :to="{path:'/user/'+val.author.loginname,query:{direction:'forward'}}"><img :src="val.author.avatar_url" class="avatar"></router-link>
+	  						<router-link :to="{path:'/user/'+val.author.loginname,query:{direction:'forward'}}"><img :src="avatar" class="avatar" @load="getReal(val.author,$event)"></router-link>
 	  					<!-- <p class="username">{{val.author.loginname}}</p> -->
 		  				</div>
 		  				<div class="topicContent">
@@ -52,14 +52,17 @@ import vFooter from '@/components/footer'
 import vContent from '@/components/content'
 import mixin from '@/mixin'
 import $ from 'jQuery'
+import avatar from '@/assets/default_avatar.gif'
 import loading from '@/components/loading'
+
 export default {
   name: 'index',
   mixins:[mixin],
   components:{vNav,vFooter,vContent,loading},
   data () {
     return {
-    	api:'/topics'
+    	api:'/topics',
+		avatar:avatar
     }
   },
   filters:{
@@ -72,7 +75,7 @@ export default {
   },
   methods:{
   	
-  }
+   }
 }
 </script>
 
@@ -115,7 +118,7 @@ export default {
 	}
 	.title{
 		padding-left:5px;
-		font-size: 12px;
+		font-size: 15px;
 	}
 	.create_time{
 		font-size: 12px;

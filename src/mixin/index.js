@@ -4,6 +4,7 @@ import hasCollect from '@/filters/hasCollected';
 import pullData from './pullData';
 import route_data from '@/route_data';
 import $ from 'jQuery'
+import avatar from '@/assets/default_avatar.gif'
 Vue.use(vueResource);
 let mixin={
 	mixins:[pullData,route_data],
@@ -17,6 +18,7 @@ let mixin={
 			scrollTop:0,
 			curr_url:'',
 			store_data:[],
+			avatar:avatar
 		}
 	},
 	created () {
@@ -32,6 +34,9 @@ let mixin={
 	},
 	mounted (){
 		!this.complete&&this.pullData();
+		// this.$refs['avatar'].forEach(function(val){
+		// 	console.log(val.src);
+		// })
 	},
 	watch:{
 		$route (news,old) {
@@ -50,6 +55,14 @@ let mixin={
 			}
 	},
 	methods:{
+		getReal (val,ev) {
+			var tmp = val.avatar_url;
+			var img = new Image();
+			img.src = tmp;
+			img.onload = function(){
+				ev.path[0].src = tmp;
+			}
+	  	},
 		init (){
 			this.page=1;
 			this.complete=false;
@@ -96,6 +109,7 @@ let mixin={
 					return;
 				}
 				this.pageData=this.pageData.concat(JSON.parse(JSON.stringify(dataList)));
+			
 			});
 			this.doAjax();
 		},
@@ -161,4 +175,5 @@ let mixin={
 			}
 	}
 }
+
 export default mixin;

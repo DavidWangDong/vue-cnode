@@ -3,7 +3,7 @@
 		  <template v-for="(val,index) in pagedata">
 			  	<div class="homeHead">
 					<span class="leftImg">
-						<img :src="val.avatar_url">
+						<img :src="avatar" @load="getReal(val,$event)">
 					</span>
 					<div class="midInfo">
 						<span class="username">{{val.loginname}}</span>
@@ -28,7 +28,7 @@
 							<li class="listCell" v-for="(topic,key) in get_type_topic">
 								<router-link :to="'/topic/'+topic.id">
 									<span class="topic_left_img">
-										<img :src="topic.author.avatar_url">
+										<img :src="avatar" @load="getReal(val,$event)">
 									</span>
 									<div class="topicInfo">
 										<div>
@@ -52,7 +52,9 @@
 </template>
 
 <script>
-	
+	import mixin from '@/mixin/index.js'
+	import avatar from '@/assets/default_avatar.gif'
+	var {getReal} = mixin.methods; 
 	export default {
 		name:'userhome',
 		props:['pagedata','username','target','type','active'],
@@ -61,7 +63,8 @@
 				activeClass:'about',
 				collect:[],
 				collect_load:false,
-				scrollTop:0
+				scrollTop:0,
+				avatar:avatar
 			}
 		},
 		created (){
@@ -122,7 +125,8 @@
 			},
 			deleteMyTopic (id) {
 				
-			}
+			},
+			getReal:getReal
 		}
 	}
 

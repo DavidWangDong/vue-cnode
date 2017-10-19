@@ -7,7 +7,7 @@
 				<div class="topicInfo">
 					<div class="author">
 						<router-link :to="{path:'/user/'+val.author.loginname}">
-							<img :src="val.author.avatar_url">
+							<img :src="avatar" @load="getReal(val.author,$event)">
 							<span>{{val.author.loginname}}</span>
 						</router-link>
 					</div>
