@@ -1,4 +1,5 @@
 <template>
+    <!-- 测试 -->
 	<div class="wrap">	
 		<user-home-head :title="title"></user-home-head>		
 		<user-home :pagedata="pageData" :username="user" :target="target" :type="type" :scrollTop="scrollTop" :active="active" @chgtabs="chgTab"></user-home>
