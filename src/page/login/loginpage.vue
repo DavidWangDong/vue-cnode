@@ -21,7 +21,7 @@
 		components:{userHomeHead},
 		data () {
 			return {
-				id:'f3afaac8-4027-4fd9-8244-17d2442952d2',
+				id:'',
 				lastUrl:'/',
 				title:'登录页'
 			}
