@@ -3,7 +3,7 @@
 		  <template v-for="(val,index) in pagedata">
 			  	<div class="homeHead">
 					<span class="leftImg">
-						<img :src="avatar" @load="getReal(val,$event)">
+						<img :src="avatar" @load.once="getReal(val,$event)">
 					</span>
 					<div class="midInfo">
 						<span class="username">{{val.loginname}}</span>
@@ -28,7 +28,7 @@
 							<li class="listCell" v-for="(topic,key) in get_type_topic">
 								<router-link :to="'/topic/'+topic.id">
 									<span class="topic_left_img">
-										<img :src="avatar" @load="getReal(val,$event)">
+										<img :src="avatar" @load.once="getReal(val,$event)">
 									</span>
 									<div class="topicInfo">
 										<div>

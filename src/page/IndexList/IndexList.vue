@@ -14,7 +14,7 @@
 	  				<span class=""></span>
 	  				<div class="topContent">
 	  					<div class="headInfo">
-	  						<router-link :to="{path:'/user/'+val.author.loginname,query:{direction:'forward'}}"><img :src="avatar" class="avatar" @load="getReal(val.author,$event)"></router-link>
+	  						<router-link :to="{path:'/user/'+val.author.loginname,query:{direction:'forward'}}"><img :src="avatar" class="avatar" @load.once="getReal(val.author,$event)"></router-link>
 	  					<!-- <p class="username">{{val.author.loginname}}</p> -->
 		  				</div>
 		  				<div class="topicContent">
