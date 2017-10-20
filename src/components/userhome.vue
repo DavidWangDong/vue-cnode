@@ -28,7 +28,7 @@
 							<li class="listCell" v-for="(topic,key) in get_type_topic">
 								<router-link :to="'/topic/'+topic.id">
 									<span class="topic_left_img">
-										<img :src="avatar" @load.once="getReal(val,$event)">
+										<img :src="avatar" @load.once="getReal(topic.author,$event)">
 									</span>
 									<div class="topicInfo">
 										<div>
