@@ -28,11 +28,17 @@
 		},
 		methods:{
 			login () {
+				if (!!!this.id){
+					this.$emit('showtost','请输入accesstoken');
+					return ;
+				}
 				this.$http.post('https://cnodejs.org/api/v1/accesstoken',{accesstoken:this.id}).then((data)=>{
 					let param=JSON.parse(JSON.stringify(data.data));
 					param.accesstoken=this.id;
 					this.$store.commit('login',param);
 					this.$router.back();
+				}).catch((data)=>{
+					this.$emit('showtost',data.data.error_msg);
 				})
 			}
 		}
