@@ -25,7 +25,7 @@
 					<li class="speakCell" v-for="(reply,key) in val.replies">
 						<div class="cellHead">
 							<router-link :to="{path:'/user/'+reply.author.loginname}">
-								<img :src="reply.author.avatar_url">
+								<img :src="avatar" @load.once="getReal(reply.author,$event)">
 								<span>{{reply.author.loginname}}</span>
 							</router-link>
 							<span class="time">{{reply.create_at|time_format}}</span>
