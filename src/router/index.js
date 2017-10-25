@@ -77,5 +77,23 @@ router.beforeEach(function (to,from,next) {
     }
     next();
 });
-
+router.afterEach(function(to,from,next){
+  
+  if (from.name===null){
+    router.push({path:'/'})
+    return
+  }
+  // let toIndex,fromIndex;
+  // router.options.routes.forEach(function(val,index){
+  //   if (to.name == val.name){
+  //     toIndex=index;
+  //   }
+  //   if (from.name==val.name){
+  //     fromIndex = index;
+  //   }
+  // })
+  // if (toIndex<fromIndex){
+  //   router.push({path:'/'});
+  // }
+})
 export default router;
